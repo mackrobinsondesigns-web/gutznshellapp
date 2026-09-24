@@ -12,6 +12,7 @@ import {
   Keyboard,
 } from "react-native";
 import { useState } from "react";
+import { supabase } from "../lib/supabase";
 
 export default function EstimateScreen() {
   const { service: selectedService } = useLocalSearchParams();
@@ -103,7 +104,7 @@ export default function EstimateScreen() {
                 style={styles.selectedServiceInput}
                 value={service}
                 onChangeText={setService}
-                editable={false}
+                editable={true} // Allow editing in case the user wants to change it
               />
 
               <TextInput
@@ -133,7 +134,7 @@ export default function EstimateScreen() {
 
               <Pressable
                 style={styles.submitButton}
-                onPress={() => {
+                onPress={async () => {
                   if (!name) {
                     alert("Please enter your name.");
                     return;
@@ -155,6 +156,28 @@ export default function EstimateScreen() {
                     details,
                     submittedAt: new Date().toISOString(),
                   };
+
+                  const { error } = await supabase
+                    .from("estimate_requests")
+                    .insert({
+                      name: estimateRequest.name,
+                      year: estimateRequest.year,
+                      make: estimateRequest.make,
+                      model: estimateRequest.model,
+                      service: estimateRequest.service,
+                      phone: estimateRequest.phone,
+                      email: estimateRequest.email,
+                      details: estimateRequest.details,
+                      submitted_at: estimateRequest.submittedAt,
+                    });
+
+                  if (error) {
+                    console.error(error);
+                    alert(
+                      "There was a problem submitting your estimate. Please try again.",
+                    );
+                    return;
+                  }
 
                   alert(
                     `ESTIMATE REQUEST RECEIVED\n\n` +
@@ -191,59 +214,64 @@ export default function EstimateScreen() {
 const styles = StyleSheet.create({
   keyboardContainer: {
     flex: 1,
-    backgroundColor: "#ffffff",
+    backgroundColor: "000000db",
   },
   scrollContainer: {
     flexGrow: 1,
     alignItems: "center",
     padding: 20,
     paddingBottom: 80,
+    backgroundColor: "#000000db",
   },
   successContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
-    borderRadius: 8,
-    backgroundColor: "#6da1cb",
+    borderRadius: 18,
+    backgroundColor: "#000000db",
   },
   title: {
     fontSize: 28,
     fontWeight: "bold",
     textAlign: "center",
     marginTop: 20,
+    color: "#b4b9be",
   },
   subtitle: {
     fontSize: 16,
     marginTop: 4,
     textAlign: "center",
     marginBottom: 10,
+    color: "#b4b9be",
   },
   input: {
     width: "100%",
     height: 48,
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: "#6f90ba",
     borderRadius: 6,
     marginTop: 12,
     padding: 10,
+    backgroundColor: "#dfdede",
   },
   messageInput: {
     width: "100%",
     height: 100,
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: "#6f90ba",
     borderRadius: 6,
     marginTop: 12,
     padding: 10,
     textAlignVertical: "top",
+    backgroundColor: "#dfdede",
   },
   submitButton: {
     width: "100%",
     padding: 14,
-    marginTop: 10,
+    marginTop: 20,
     borderRadius: 10,
-    backgroundColor: "#adc2ac",
+    backgroundColor: "#6f90ba",
     alignItems: "center",
     marginBottom: 20,
   },
@@ -256,12 +284,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 20,
+    color: "#b4b9be",
   },
   homeButton: {
     width: "55%",
     padding: 12,
     borderRadius: 10,
-    backgroundColor: "#b3b9d0",
+    backgroundColor: "#6f90ba",
     alignItems: "center",
   },
   homeButtonText: {
@@ -274,6 +303,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginTop: 15,
     textAlign: "center",
+    color: "#6f90ba",
   },
 
   selectedServiceInput: {
@@ -283,6 +313,6 @@ const styles = StyleSheet.create({
     marginTop: 12,
     padding: 10,
     fontWeight: "bold",
-    backgroundColor: "#e6e6e6",
+    backgroundColor: "#f4f4f4",
   },
 });

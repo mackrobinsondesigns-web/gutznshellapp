@@ -60,11 +60,12 @@ export default function ServicesScreen() {
         price="$500+"
         description="Panels, bolsters, foam & partial restoration."
         onPress={() =>
-          alert(
-            "SEAT REPAIR — STANDARD\n\n" +
-              "Starting at $500+\n\n" +
-              "Panels, bolsters, foam & partial restoration.",
-          )
+          router.push({
+            pathname: "/estimate",
+            params: {
+              service: "SEAT REPAIR — STANDARD",
+            },
+          })
         }
       />
 
@@ -73,11 +74,12 @@ export default function ServicesScreen() {
         price="$1,500+"
         description="Complete custom reupholstery & premium materials."
         onPress={() =>
-          alert(
-            "SEAT REPAIR — PREMIUM\n\n" +
-              "Starting at $1,500+\n\n" +
-              "Complete custom reupholstery & premium materials.",
-          )
+          router.push({
+            pathname: "/estimate",
+            params: {
+              service: "SEAT REPAIR — PREMIUM",
+            },
+          })
         }
       />
 
@@ -93,11 +95,12 @@ export default function ServicesScreen() {
         price="$250+"
         description="OEM-style replacement & basic headliner service."
         onPress={() =>
-          alert(
-            "HEADLINERS & ROOF INTERIORS — BASIC\n\n" +
-              "Starting at $250+\n\n" +
-              "OEM-style replacement & basic headliner service.",
-          )
+          router.push({
+            pathname: "/estimate",
+            params: {
+              service: "HEADLINERS & ROOF INTERIORS — BASIC",
+            },
+          })
         }
       />
 
@@ -106,11 +109,12 @@ export default function ServicesScreen() {
         price="$450+"
         description="Full headliner service, pillars and custom finishes."
         onPress={() =>
-          alert(
-            "HEADLINERS & ROOF INTERIORS — STANDARD\n\n" +
-              "Starting at $450+\n\n" +
-              "Full headliner service, pillars and custom finishes.",
-          )
+          router.push({
+            pathname: "/estimate",
+            params: {
+              service: "HEADLINERS & ROOF INTERIORS — STANDARD",
+            },
+          })
         }
       />
 
@@ -119,11 +123,12 @@ export default function ServicesScreen() {
         price="$900+"
         description="Full headliner service, pillars and custom finishes."
         onPress={() =>
-          alert(
-            "HEADLINERS & ROOF INTERIORS — PREMIUM\n\n" +
-              "Starting at $900+\n\n" +
-              "Full headliner service, pillars and custom finishes.",
-          )
+          router.push({
+            pathname: "/estimate",
+            params: {
+              service: "HEADLINERS & ROOF INTERIORS — PREMIUM",
+            },
+          })
         }
       />
 
@@ -139,11 +144,12 @@ export default function ServicesScreen() {
         price="$150+"
         description="Minor upholstery repairs & basic door panel service."
         onPress={() =>
-          alert(
-            "DOOR PANELS & ARMRESTS — BASIC\n\n" +
-              "Starting at $150+\n\n" +
-              "Minor upholstery repairs & basic door panel service.",
-          )
+          router.push({
+            pathname: "/estimate",
+            params: {
+              service: "DOOR PANELS & ARMRESTS — BASIC",
+            },
+          })
         }
       />
 
@@ -152,11 +158,12 @@ export default function ServicesScreen() {
         price="$500+"
         description="Full door panel service, inserts and custom finishes."
         onPress={() =>
-          alert(
-            "DOOR PANELS & ARMRESTS — STANDARD\n\n" +
-              "Starting at $500+\n\n" +
-              "Full door panel service, inserts and custom finishes.",
-          )
+          router.push({
+            pathname: "/estimate",
+            params: {
+              service: "DOOR PANELS & ARMRESTS — STANDARD",
+            },
+          })
         }
       />
 
@@ -165,11 +172,12 @@ export default function ServicesScreen() {
         price="$1,500+"
         description="Complete custom door panel service & premium materials."
         onPress={() =>
-          alert(
-            "DOOR PANELS & ARMRESTS — PREMIUM\n\n" +
-              "Starting at $1,500+\n\n" +
-              "Complete custom door panel service & premium materials.",
-          )
+          router.push({
+            pathname: "/estimate",
+            params: {
+              service: "DOOR PANELS & ARMRESTS — PREMIUM",
+            },
+          })
         }
       />
 
@@ -185,11 +193,12 @@ export default function ServicesScreen() {
         price="$150+"
         description="Basic carpet and flooring service."
         onPress={() =>
-          alert(
-            "CARPET & FLOORING — BASIC\n\n" +
-              "Starting at $150+\n\n" +
-              "Basic carpet and flooring service.",
-          )
+          router.push({
+            pathname: "/estimate",
+            params: {
+              service: "CARPET & FLOORING — BASIC",
+            },
+          })
         }
       />
 
@@ -198,11 +207,12 @@ export default function ServicesScreen() {
         price="$800+"
         description="Full carpet and flooring service, custom finishes."
         onPress={() =>
-          alert(
-            "CARPET & FLOORING — STANDARD\n\n" +
-              "Starting at $800+\n\n" +
-              "Full carpet and flooring service, custom finishes.",
-          )
+          router.push({
+            pathname: "/estimate",
+            params: {
+              service: "CARPET & FLOORING — STANDARD",
+            },
+          })
         }
       />
 
@@ -211,11 +221,12 @@ export default function ServicesScreen() {
         price="$2,000+"
         description="Complete custom carpet and flooring service & premium materials."
         onPress={() =>
-          alert(
-            "CARPET & FLOORING — PREMIUM\n\n" +
-              "Starting at $2,000+\n\n" +
-              "Complete custom carpet and flooring service & premium materials.",
-          )
+          router.push({
+            pathname: "/estimate",
+            params: {
+              service: "CARPET & FLOORING — PREMIUM",
+            },
+          })
         }
       />
 
@@ -231,11 +242,12 @@ export default function ServicesScreen() {
         price="$100+"
         description="Basic dash, console and trim service."
         onPress={() =>
-          alert(
-            "DASH, CONSOLE & TRIM — BASIC\n\n" +
-              "Starting at $100+\n\n" +
-              "Basic dash, console and trim service.",
-          )
+          router.push({
+            pathname: "/estimate",
+            params: {
+              service: "DASH, CONSOLE & TRIM — BASIC",
+            },
+          })
         }
       />
 
@@ -244,11 +256,12 @@ export default function ServicesScreen() {
         price="$500+"
         description="Full dash, console and trim service, custom finishes."
         onPress={() =>
-          alert(
-            "DASH, CONSOLE & TRIM — STANDARD\n\n" +
-              "Starting at $500+\n\n" +
-              "Full dash, console and trim service, custom finishes.",
-          )
+          router.push({
+            pathname: "/estimate",
+            params: {
+              service: "DASH, CONSOLE & TRIM — STANDARD",
+            },
+          })
         }
       />
 
@@ -257,11 +270,12 @@ export default function ServicesScreen() {
         price="$2,000+"
         description="Complete custom dash, console and trim service & premium materials."
         onPress={() =>
-          alert(
-            "DASH, CONSOLE & TRIM — PREMIUM\n\n" +
-              "Starting at $2,000+\n\n" +
-              "Complete custom dash, console and trim service & premium materials.",
-          )
+          router.push({
+            pathname: "/estimate",
+            params: {
+              service: "DASH, CONSOLE & TRIM — PREMIUM",
+            },
+          })
         }
       />
 
@@ -277,11 +291,12 @@ export default function ServicesScreen() {
         price="$200+"
         description="Basic convertible top service."
         onPress={() =>
-          alert(
-            "CONVERTIBLE TOP SERVICES — BASIC\n\n" +
-              "Starting at $200+\n\n" +
-              "Basic convertible top service.",
-          )
+          router.push({
+            pathname: "/estimate",
+            params: {
+              service: "CONVERTIBLE TOP SERVICES — BASIC",
+            },
+          })
         }
       />
 
@@ -290,11 +305,12 @@ export default function ServicesScreen() {
         price="$750+"
         description="Full convertible top service, custom finishes."
         onPress={() =>
-          alert(
-            "CONVERTIBLE TOP SERVICES — STANDARD\n\n" +
-              "Starting at $750+\n\n" +
-              "Full convertible top service, custom finishes.",
-          )
+          router.push({
+            pathname: "/estimate",
+            params: {
+              service: "CONVERTIBLE TOP SERVICES — STANDARD",
+            },
+          })
         }
       />
 
@@ -303,11 +319,12 @@ export default function ServicesScreen() {
         price="$1,500+"
         description="Complete custom convertible top service & premium materials."
         onPress={() =>
-          alert(
-            "CONVERTIBLE TOP SERVICES — PREMIUM\n\n" +
-              "Starting at $1,500+\n\n" +
-              "Complete custom convertible top service & premium materials.",
-          )
+          router.push({
+            pathname: "/estimate",
+            params: {
+              service: "CONVERTIBLE TOP SERVICES — PREMIUM",
+            },
+          })
         }
       />
 
@@ -322,11 +339,12 @@ export default function ServicesScreen() {
         price="$500+"
         description="Custom diamond stitching for a luxurious look."
         onPress={() =>
-          alert(
-            "CUSTOM UPGRADES — DIAMOND STITCHING\n\n" +
-              "Starting at $500+\n\n" +
-              "Custom diamond stitching for a luxurious look.",
-          )
+          router.push({
+            pathname: "/estimate",
+            params: {
+              service: "CUSTOM UPGRADES — DIAMOND STITCHING",
+            },
+          })
         }
       />
 
@@ -335,11 +353,12 @@ export default function ServicesScreen() {
         price="$750+"
         description="Custom two-tone upholstery for a unique look."
         onPress={() =>
-          alert(
-            "CUSTOM UPGRADES — TWO-TONE UPHOLSTERY\n\n" +
-              "Starting at $750+\n\n" +
-              "Custom two-tone upholstery for a unique look.",
-          )
+          router.push({
+            pathname: "/estimate",
+            params: {
+              service: "CUSTOM UPGRADES — TWO-TONE UPHOLSTERY",
+            },
+          })
         }
       />
 
@@ -348,11 +367,12 @@ export default function ServicesScreen() {
         price="$1,000+"
         description="Premium leather seating for a luxurious feel."
         onPress={() =>
-          alert(
-            "CUSTOM UPGRADES — PREMIUM LEATHER\n\n" +
-              "Starting at $1,000+\n\n" +
-              "Premium leather seating for a luxurious feel.",
-          )
+          router.push({
+            pathname: "/estimate",
+            params: {
+              service: "CUSTOM UPGRADES — PREMIUM LEATHER",
+            },
+          })
         }
       />
 
@@ -361,11 +381,12 @@ export default function ServicesScreen() {
         price="$75+"
         description="Custom embroidery for a personalized touch."
         onPress={() =>
-          alert(
-            "CUSTOM UPGRADES — CUSTOM EMBROIDERY\n\n" +
-              "Starting at $75+\n\n" +
-              "Custom embroidery for a personalized touch.",
-          )
+          router.push({
+            pathname: "/estimate",
+            params: {
+              service: "CUSTOM UPGRADES — CUSTOM EMBROIDERY",
+            },
+          })
         }
       />
 
@@ -374,11 +395,12 @@ export default function ServicesScreen() {
         price="$750+"
         description="Custom trunk upholstery for a cohesive look."
         onPress={() =>
-          alert(
-            "CUSTOM UPGRADES — CUSTOM TRUNK UPHOLSTERY\n\n" +
-              "Starting at $750+\n\n" +
-              "Custom trunk upholstery for a cohesive look.",
-          )
+          router.push({
+            pathname: "/estimate",
+            params: {
+              service: "CUSTOM UPGRADES — CUSTOM TRUNK UPHOLSTERY",
+            },
+          })
         }
       />
 
@@ -387,11 +409,12 @@ export default function ServicesScreen() {
         price="$500+"
         description="Complete sound deadening for a quieter ride."
         onPress={() =>
-          alert(
-            "CUSTOM UPGRADES — SOUND DEADENING\n\n" +
-              "Starting at $500+\n\n" +
-              "Complete sound deadening for a quieter ride.",
-          )
+          router.push({
+            pathname: "/estimate",
+            params: {
+              service: "CUSTOM UPGRADES — SOUND DEADENING",
+            },
+          })
         }
       />
 
@@ -407,11 +430,12 @@ export default function ServicesScreen() {
         price="$3,000+"
         description="Complete interior restoration for classic vehicles."
         onPress={() =>
-          alert(
-            "CLASSIC & CUSTOM RESTORATION — STANDARD RESTORATION\n\n" +
-              "Starting at $3,000+\n\n" +
-              "Complete interior restoration for classic vehicles.",
-          )
+          router.push({
+            pathname: "/estimate",
+            params: {
+              service: "CLASSIC & CUSTOM RESTORATION — STANDARD RESTORATION",
+            },
+          })
         }
       />
 
@@ -420,11 +444,13 @@ export default function ServicesScreen() {
         price="$10,000+"
         description="Complete premium interior restoration for a luxurious feel."
         onPress={() =>
-          alert(
-            "CLASSIC & CUSTOM RESTORATION — PREMIUM COMPLETE INTERIOR\n\n" +
-              "Starting at $10,000+\n\n" +
-              "Complete premium interior restoration for a luxurious feel.",
-          )
+          router.push({
+            pathname: "/estimate",
+            params: {
+              service:
+                "CLASSIC & CUSTOM RESTORATION — PREMIUM COMPLETE INTERIOR",
+            },
+          })
         }
       />
     </ScrollView>
@@ -436,17 +462,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
     paddingBottom: 40,
+    backgroundColor: "#000000db",
   },
 
   title: {
     fontSize: 28,
     fontWeight: "bold",
     textAlign: "center",
+    color: "#b4b9be",
   },
 
   subtitle: {
     fontSize: 16,
     marginTop: 15,
+    color: "#b4b9be",
     textAlign: "center",
   },
 
@@ -455,12 +484,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginTop: 30,
     textAlign: "center",
+    color: "#b4b9be",
   },
 
   serviceText: {
     fontSize: 15,
     marginTop: 10,
     textAlign: "center",
+    color: "#b4b9be",
   },
 
   packageCard: {
