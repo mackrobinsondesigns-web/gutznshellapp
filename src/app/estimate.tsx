@@ -303,7 +303,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginTop: 15,
     textAlign: "center",
-    color: "#6f90ba",
+    color: "#6f90bacd C:\Users\MR!Designs\Documents\AutoUpholsteryApp\GutzNShell\GutzNShellApp",
   },
 
   selectedServiceInput: {

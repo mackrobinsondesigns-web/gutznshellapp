@@ -1,4 +1,3 @@
-// @ts-expect-error The Supabase dependency is provided by the app's runtime.
 import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = "https://zukzwhpllvmsengpbcpx.supabase.co";
