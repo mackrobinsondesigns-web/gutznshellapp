@@ -1,47 +1,73 @@
-import { View, Text, StyleSheet, Pressable } from "react-native";
-import { router } from "expo-router";
+import { View, Text, StyleSheet, Pressable, Image } from "react-native";
+import { router, Stack } from "expo-router";
 
 const stitchBorderText = "-".repeat(200);
 
 export default function HomeScreen() {
   // A long string of dashes to act as our sewing thread loop
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>GUTZ N SHELL</Text>
+    <>
+      <Stack.Screen
+        options={{
+          title: "GUTZ N SHELL",
+        }}
+      />
 
-      <Text style={styles.subtitle}>
-        PREMIUM AUTOMOTIVE INTERIOR RESTORATION
-      </Text>
+      <View style={styles.container}>
+        <Image
+          source={require("../../assets/images/gutz-n-shell-logo.png")}
+          style={styles.logo}
+        />
+        <Text style={styles.title}>GUTZ N SHELL</Text>
 
-      <Text style={styles.tagline}>REPAIR IT • RESTORE IT • CUSTOMIZE IT</Text>
+        <Text style={styles.subtitle}>
+          PREMIUM AUTOMOTIVE INTERIOR RESTORATION
+        </Text>
 
-      {/* 🟦 Outer Card Container */}
-      <View style={styles.card}>
-        {/* 🧵 Pure Text Stitch Tracks (Zero Packages Required) */}
-        {/* Top Stitch */}
-        <View style={[styles.stitchBorder, { left: 1, right: 1 }]}></View>
+        <Text style={styles.tagline}>
+          REPAIR IT • RESTORE IT • CUSTOMIZE IT
+        </Text>
 
-        {/* 🛠️ Inner Card Content Layer */}
-        <View style={styles.contentContainer}>
-          <Text style={styles.cardTitle}>SEAT REPAIR & UPHOLSTERY</Text>
-          <Text style={styles.cardText}>
-            Repairs, restoration, custom upholstery and premium materials.
-          </Text>
+        {/* 🟦 Outer Card Container */}
+        <View style={styles.card}>
+          {/* 🧵 Pure Text Stitch Tracks (Zero Packages Required) */}
+          {/* Top Stitch */}
+          <View style={[styles.stitchBorder, { left: 1, right: 1 }]}></View>
+
+          {/* 🛠️ Inner Card Content Layer */}
+          <View style={styles.contentContainer}>
+            <Text style={styles.cardTitle}>SEAT REPAIR & UPHOLSTERY</Text>
+            <Text style={styles.cardText}>
+              Repairs, restoration, custom upholstery and premium materials.
+            </Text>
+          </View>
         </View>
+
+        <Pressable
+          style={styles.button}
+          onPress={() => router.push("/estimate")}
+        >
+          <Text style={styles.buttonText}>REQUEST AN ESTIMATE</Text>
+        </Pressable>
+
+        <Pressable
+          style={styles.button}
+          onPress={() => router.push("/services")}
+        >
+          <Text style={styles.buttonText}>VIEW OUR SERVICES</Text>
+        </Pressable>
       </View>
-
-      <Pressable style={styles.button} onPress={() => router.push("/estimate")}>
-        <Text style={styles.buttonText}>REQUEST AN ESTIMATE</Text>
-      </Pressable>
-
-      <Pressable style={styles.button} onPress={() => router.push("/services")}>
-        <Text style={styles.buttonText}>VIEW OUR SERVICES</Text>
-      </Pressable>
-    </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
+  logo: {
+    width: 180,
+    height: 180,
+    marginTop: -60,
+    marginBottom: 20,
+  },
   container: {
     flex: 1,
     justifyContent: "center",
@@ -51,6 +77,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 36,
+    marginTop: -30,
     fontWeight: "bold",
     color: "#b4b9be",
   },

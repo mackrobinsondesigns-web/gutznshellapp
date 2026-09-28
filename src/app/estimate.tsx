@@ -1,4 +1,4 @@
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams, Stack } from "expo-router";
 import {
   View,
   Text,
@@ -30,184 +30,197 @@ export default function EstimateScreen() {
   const [submittedName, setSubmittedName] = useState("");
 
   return (
-    // KeyboardAvoidingView automatically pushes inputs up when the virtual keyboard appears
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.keyboardContainer}
-    >
-      {/* TouchableWithoutFeedback allows the user to dismiss the keyboard by tapping an empty space */}
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <ScrollView
-          contentContainerStyle={styles.scrollContainer}
-          showsVerticalScrollIndicator={true}
-          keyboardShouldPersistTaps="handled" // Allows tapping the submit button while keyboard is open
-        >
-          {submitted ? (
-            <View style={styles.successContainer}>
-              <Text style={styles.successMessage}>
-                ESTIMATE REQUEST RECEIVED{"\n"}
-                THANK YOU, {submittedName}!
-              </Text>
-
-              <Pressable
-                style={styles.homeButton}
-                onPress={() => router.replace("/")}
-              >
-                <Text style={styles.homeButtonText}>BACK TO HOME</Text>
-              </Pressable>
-            </View>
-          ) : (
-            <>
-              <Text style={styles.title}>REQUEST AN ESTIMATE</Text>
-
-              <Text style={styles.subtitle}>
-                Tell us about your vehicle and the interior work you need.
-              </Text>
-
-              {service && (
-                <Text style={styles.selectedService}>
-                  SELECTED SERVICE: {service}
+    <>
+      <Stack.Screen
+        options={{
+          title: "REQUEST AN ESTIMATE",
+        }}
+      />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.keyboardContainer}
+      >
+        {/* TouchableWithoutFeedback allows the user to dismiss the keyboard by tapping an empty space */}
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <ScrollView
+            contentContainerStyle={styles.scrollContainer}
+            showsVerticalScrollIndicator={true}
+            keyboardShouldPersistTaps="handled" // Allows tapping the submit button while keyboard is open
+          >
+            {submitted ? (
+              <View style={styles.successContainer}>
+                <Text style={styles.successMessage}>
+                  ESTIMATE REQUEST RECEIVED{"\n\n"}
+                  THANK YOU, {submittedName}!
                 </Text>
-              )}
 
-              <TextInput
-                placeholder="ENTER YOUR NAME"
-                style={styles.input}
-                value={name}
-                onChangeText={setName}
-              />
+                <Text style={styles.successSubtext}>
+                  Your request has been successfully submitted to GUTZ N SHELL.
+                  {"\n\n"}
+                  We’ll review your vehicle and service details and get back to
+                  you soon.
+                </Text>
 
-              <TextInput
-                placeholder="VEHICLE YEAR"
-                style={styles.input}
-                value={year}
-                onChangeText={setYear}
-                keyboardType="numeric" // Better UX for typing years
-              />
+                <Pressable
+                  style={styles.homeButton}
+                  onPress={() => router.replace("/")}
+                >
+                  <Text style={styles.homeButtonText}>BACK TO HOME</Text>
+                </Pressable>
+              </View>
+            ) : (
+              <>
+                <Text style={styles.title}>REQUEST AN ESTIMATE</Text>
 
-              <TextInput
-                placeholder="VEHICLE MAKE"
-                style={styles.input}
-                value={make}
-                onChangeText={setMake}
-              />
+                <Text style={styles.subtitle}>
+                  Tell us about your vehicle and the interior work you need.
+                </Text>
 
-              <TextInput
-                placeholder="VEHICLE MODEL"
-                style={styles.input}
-                value={model}
-                onChangeText={setModel}
-              />
+                {service && (
+                  <Text style={styles.selectedService}>
+                    SELECTED SERVICE: {service}
+                  </Text>
+                )}
 
-              <TextInput
-                placeholder="SERVICE NEEDED"
-                style={styles.selectedServiceInput}
-                value={service}
-                onChangeText={setService}
-                editable={true} // Allow editing in case the user wants to change it
-              />
+                <TextInput
+                  placeholder="ENTER YOUR NAME"
+                  style={styles.input}
+                  value={name}
+                  onChangeText={setName}
+                />
 
-              <TextInput
-                placeholder="PHONE NUMBER"
-                style={styles.input}
-                value={phone}
-                onChangeText={setPhone}
-                keyboardType="phone-pad"
-              />
+                <TextInput
+                  placeholder="VEHICLE YEAR"
+                  style={styles.input}
+                  value={year}
+                  onChangeText={setYear}
+                  keyboardType="numeric" // Better UX for typing years
+                />
 
-              <TextInput
-                placeholder="EMAIL ADDRESS"
-                style={styles.input}
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none" // Stops keyboard from forcing uppercase on email
-              />
+                <TextInput
+                  placeholder="VEHICLE MAKE"
+                  style={styles.input}
+                  value={make}
+                  onChangeText={setMake}
+                />
 
-              <TextInput
-                placeholder="DESCRIBE THE WORK NEEDED"
-                style={styles.messageInput}
-                value={details}
-                onChangeText={setDetails}
-                multiline
-              />
+                <TextInput
+                  placeholder="VEHICLE MODEL"
+                  style={styles.input}
+                  value={model}
+                  onChangeText={setModel}
+                />
 
-              <Pressable
-                style={styles.submitButton}
-                onPress={async () => {
-                  if (!name) {
-                    alert("Please enter your name.");
-                    return;
-                  }
+                <TextInput
+                  placeholder="SERVICE NEEDED"
+                  style={styles.selectedServiceInput}
+                  value={service}
+                  onChangeText={setService}
+                  editable={true} // Allow editing in case the user wants to change it
+                />
 
-                  if (!year || !make || !model) {
-                    alert("Please enter your complete vehicle information.");
-                    return;
-                  }
+                <TextInput
+                  placeholder="PHONE NUMBER"
+                  style={styles.input}
+                  value={phone}
+                  onChangeText={setPhone}
+                  keyboardType="phone-pad"
+                />
 
-                  const estimateRequest = {
-                    name,
-                    year,
-                    make,
-                    model,
-                    service,
-                    phone,
-                    email,
-                    details,
-                    submittedAt: new Date().toISOString(),
-                  };
+                <TextInput
+                  placeholder="EMAIL ADDRESS"
+                  style={styles.input}
+                  value={email}
+                  onChangeText={setEmail}
+                  keyboardType="email-address"
+                  autoCapitalize="none" // Stops keyboard from forcing uppercase on email
+                />
 
-                  const { error } = await supabase
-                    .from("estimate_requests")
-                    .insert({
-                      name: estimateRequest.name,
-                      year: estimateRequest.year,
-                      make: estimateRequest.make,
-                      model: estimateRequest.model,
-                      service: estimateRequest.service,
-                      phone: estimateRequest.phone,
-                      email: estimateRequest.email,
-                      details: estimateRequest.details,
-                      submitted_at: estimateRequest.submittedAt,
-                    });
+                <TextInput
+                  placeholder="DESCRIBE THE WORK NEEDED"
+                  style={styles.messageInput}
+                  value={details}
+                  onChangeText={setDetails}
+                  multiline
+                />
 
-                  if (error) {
-                    console.error(error);
+                <Pressable
+                  style={styles.submitButton}
+                  onPress={async () => {
+                    if (!name) {
+                      alert("Please enter your name.");
+                      return;
+                    }
+
+                    if (!year || !make || !model) {
+                      alert("Please enter your complete vehicle information.");
+                      return;
+                    }
+
+                    const estimateRequest = {
+                      name,
+                      year,
+                      make,
+                      model,
+                      service,
+                      phone,
+                      email,
+                      details,
+                      submittedAt: new Date().toISOString(),
+                    };
+
+                    const { error } = await supabase
+                      .from("estimate_requests")
+                      .insert({
+                        name: estimateRequest.name,
+                        year: estimateRequest.year,
+                        make: estimateRequest.make,
+                        model: estimateRequest.model,
+                        service: estimateRequest.service,
+                        phone: estimateRequest.phone,
+                        email: estimateRequest.email,
+                        details: estimateRequest.details,
+                        submitted_at: estimateRequest.submittedAt,
+                      });
+
+                    if (error) {
+                      console.error(error);
+                      alert(
+                        "There was a problem submitting your estimate. Please try again.",
+                      );
+                      return;
+                    }
+
                     alert(
-                      "There was a problem submitting your estimate. Please try again.",
+                      `ESTIMATE REQUEST RECEIVED\n\n` +
+                        `Customer: ${estimateRequest.name}\n` +
+                        `Vehicle: ${estimateRequest.year} ${estimateRequest.make} ${estimateRequest.model}\n` +
+                        `Service: ${estimateRequest.service}`,
                     );
-                    return;
-                  }
 
-                  alert(
-                    `ESTIMATE REQUEST RECEIVED\n\n` +
-                      `Customer: ${estimateRequest.name}\n` +
-                      `Vehicle: ${estimateRequest.year} ${estimateRequest.make} ${estimateRequest.model}\n` +
-                      `Service: ${estimateRequest.service}`,
-                  );
+                    setSubmittedName(name);
+                    setSubmitted(true);
 
-                  setSubmittedName(name);
-                  setSubmitted(true);
-
-                  setName("");
-                  setYear("");
-                  setMake("");
-                  setModel("");
-                  setService("");
-                  setPhone("");
-                  setEmail("");
-                  setDetails("");
-                }}
-              >
-                <Text style={styles.submitButtonText}>
-                  SUBMIT ESTIMATE REQUEST
-                </Text>
-              </Pressable>
-            </>
-          )}
-        </ScrollView>
-      </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+                    setName("");
+                    setYear("");
+                    setMake("");
+                    setModel("");
+                    setService("");
+                    setPhone("");
+                    setEmail("");
+                    setDetails("");
+                  }}
+                >
+                  <Text style={styles.submitButtonText}>
+                    SUBMIT ESTIMATE REQUEST
+                  </Text>
+                </Pressable>
+              </>
+            )}
+          </ScrollView>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+    </>
   );
 }
 
@@ -286,6 +299,14 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: "#b4b9be",
   },
+  successSubtext: {
+    fontSize: 15,
+    lineHeight: 23,
+    textAlign: "center",
+    marginTop: 15,
+    marginBottom: 25,
+    color: "#b4b9be",
+  },
   homeButton: {
     width: "55%",
     padding: 12,
@@ -303,7 +324,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginTop: 15,
     textAlign: "center",
-    color: "#6f90bacd C:\Users\MR!Designs\Documents\AutoUpholsteryApp\GutzNShell\GutzNShellApp",
+    color: "#6f90ba",
   },
 
   selectedServiceInput: {
