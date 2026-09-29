@@ -30,11 +30,11 @@ export default function HomeScreen() {
 
         {/* 🟦 Outer Card Container */}
         <View style={styles.card}>
-          {/* 🧵 Pure Text Stitch Tracks (Zero Packages Required) */}
+          {/* Pure Text Stitch Tracks (Zero Packages Required) */}
           {/* Top Stitch */}
           <View style={[styles.stitchBorder, { left: 1, right: 1 }]}></View>
 
-          {/* 🛠️ Inner Card Content Layer */}
+          {/* Inner Card Content Layer */}
           <View style={styles.contentContainer}>
             <Text style={styles.cardTitle}>SEAT REPAIR & UPHOLSTERY</Text>
             <Text style={styles.cardText}>
@@ -67,6 +67,7 @@ const styles = StyleSheet.create({
     height: 180,
     marginTop: -60,
     marginBottom: 20,
+    borderRadius: 20,
   },
   container: {
     flex: 1,
