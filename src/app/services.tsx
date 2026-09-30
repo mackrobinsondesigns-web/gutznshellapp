@@ -476,7 +476,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "bold",
     textAlign: "center",
-    color: "#b4b9be",
+    color: "#6f90ba",
   },
 
   subtitle: {
@@ -491,7 +491,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginTop: 30,
     textAlign: "center",
-    color: "#b4b9be",
+    color: "#6f90ba",
   },
 
   serviceText: {

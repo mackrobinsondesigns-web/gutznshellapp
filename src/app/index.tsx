@@ -1,63 +1,60 @@
-import { View, Text, StyleSheet, Pressable, Image } from "react-native";
-import { router, Stack } from "expo-router";
-
-const stitchBorderText = "-".repeat(200);
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  Image,
+  TouchableOpacity,
+} from "react-native";
+import { router } from "expo-router";
+import * as WebBrowser from "expo-web-browser";
 
 export default function HomeScreen() {
-  // A long string of dashes to act as our sewing thread loop
-  return (
-    <>
-      <Stack.Screen
-        options={{
-          title: "GUTZ N SHELL",
-        }}
-      />
+  const handlePress = async () => {
+    await WebBrowser.openBrowserAsync("https://gutznshell.com/");
+  };
 
-      <View style={styles.container}>
+  return (
+    <View style={styles.container}>
+      <TouchableOpacity onPress={handlePress}>
         <Image
           source={require("../../assets/images/gutz-n-shell-logo.png")}
           style={styles.logo}
         />
-        <Text style={styles.title}>GUTZ N SHELL</Text>
+      </TouchableOpacity>
 
-        <Text style={styles.subtitle}>
-          PREMIUM AUTOMOTIVE INTERIOR RESTORATION
-        </Text>
+      <Text style={styles.title}>gutznshell.com</Text>
 
-        <Text style={styles.tagline}>
-          REPAIR IT • RESTORE IT • CUSTOMIZE IT
-        </Text>
+      <Text style={styles.subtitle}>
+        PREMIUM AUTOMOTIVE INTERIOR RESTORATION
+      </Text>
 
-        {/* 🟦 Outer Card Container */}
-        <View style={styles.card}>
-          {/* Pure Text Stitch Tracks (Zero Packages Required) */}
-          {/* Top Stitch */}
-          <View style={[styles.stitchBorder, { left: 1, right: 1 }]}></View>
+      <Text style={styles.tagline}>REPAIR IT • RESTORE IT • CUSTOMIZE IT</Text>
 
-          {/* Inner Card Content Layer */}
-          <View style={styles.contentContainer}>
-            <Text style={styles.cardTitle}>SEAT REPAIR & UPHOLSTERY</Text>
-            <Text style={styles.cardText}>
-              Repairs, restoration, custom upholstery and premium materials.
-            </Text>
-          </View>
-        </View>
+      <Pressable onPress={() => router.push("/seat-repair")}>
+        <Image
+          source={require("../../assets/images/seat-repair.png")}
+          style={styles.repairButtonImage}
+          resizeMode="contain"
+        />
+      </Pressable>
 
-        <Pressable
-          style={styles.button}
-          onPress={() => router.push("/estimate")}
-        >
-          <Text style={styles.buttonText}>REQUEST AN ESTIMATE</Text>
-        </Pressable>
+      <Pressable onPress={() => router.push("/estimate")}>
+        <Image
+          source={require("../../assets/images/request-estimate.png")}
+          style={styles.estimateButtonImage}
+          resizeMode="contain"
+        />
+      </Pressable>
 
-        <Pressable
-          style={styles.button}
-          onPress={() => router.push("/services")}
-        >
-          <Text style={styles.buttonText}>VIEW OUR SERVICES</Text>
-        </Pressable>
-      </View>
-    </>
+      <Pressable onPress={() => router.push("/services")}>
+        <Image
+          source={require("../../assets/images/our-services.png")}
+          style={styles.servicesButtonImage}
+          resizeMode="contain"
+        />
+      </Pressable>
+    </View>
   );
 }
 
@@ -96,55 +93,21 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#b4b9be",
   },
-  card: {
-    width: "100%",
-    marginTop: 30,
-    borderRadius: 12,
-    backgroundColor: "#6f90ba",
-    position: "relative",
-    overflow: "hidden", // Important: cuts off excess dash tracking lines cleanly
-  },
-
-  stitchBorder: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-    margin: 4, // Insets the stitch line exactly 4px from the main border
-    borderWidth: 3.2, // Your preferred heavy upholstery thread thickness
-    borderColor: "#000000db", // Deep contrast charcoal/black thread
-    borderStyle: "dashed", // Enables standard dashboard rendering paths
-    borderRadius: 12, // Your exact preferred inner curvature radius
-  },
-
-  contentContainer: {
-    width: "100%",
-    padding: 25,
-  },
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#000000",
-    textAlign: "center",
-  },
-  cardText: {
-    fontSize: 14,
-    marginTop: 8,
-    color: "#000000",
-    textAlign: "center",
-  },
-  button: {
-    width: "100%",
-    padding: 18,
+  repairButtonImage: {
+    width: 320,
+    height: 60,
     marginTop: 20,
-    borderRadius: 10,
-    backgroundColor: "#6f90ba",
-    alignItems: "center",
   },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#000000",
+
+  estimateButtonImage: {
+    width: 320,
+    height: 60,
+    marginTop: 20,
+  },
+
+  servicesButtonImage: {
+    width: 320,
+    height: 60,
+    marginTop: 20,
   },
 });
