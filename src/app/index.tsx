@@ -23,7 +23,7 @@ export default function HomeScreen() {
         />
       </TouchableOpacity>
 
-      <Text style={styles.title}>gutznshell.com</Text>
+      <Text style={styles.title}>GUTZ N SHELL</Text>
 
       <Text style={styles.subtitle}>
         PREMIUM AUTOMOTIVE INTERIOR RESTORATION
