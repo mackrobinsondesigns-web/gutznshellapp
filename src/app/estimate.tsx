@@ -10,12 +10,14 @@ import {
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
+  Modal,
 } from "react-native";
 import { useState } from "react";
 import { supabase } from "../lib/supabase";
 
 export default function EstimateScreen() {
-  const { service: selectedService } = useLocalSearchParams();
+  const { service: selectedService, from } = useLocalSearchParams();
+  const [serviceMenuOpen, setServiceMenuOpen] = useState(false);
   const [name, setName] = useState("");
   const [year, setYear] = useState("");
   const [make, setMake] = useState("");
@@ -23,29 +25,42 @@ export default function EstimateScreen() {
   const [service, setService] = useState(
     typeof selectedService === "string" ? selectedService : "",
   );
+  const [customService, setCustomService] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [details, setDetails] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [submittedName, setSubmittedName] = useState("");
 
+  const serviceOptions = [
+    "SEAT REPAIR & UPHOLSTERY",
+    "HEADLINERS & ROOF INTERIORS",
+    "DOOR PANELS & ARMRESTS",
+    "CARPET & FLOORING",
+    "DASH, CONSOLE & TRIM",
+    "CONVERTIBLE TOP SERVICES",
+    "CUSTOM UPGRADES",
+    "CLASSIC & CUSTOM RESTORATION",
+    "OTHER",
+  ];
+
   return (
     <>
       <Stack.Screen
         options={{
           title: "REQUEST AN ESTIMATE",
+          gestureEnabled: from === "services",
         }}
       />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.keyboardContainer}
       >
-        {/* TouchableWithoutFeedback allows the user to dismiss the keyboard by tapping an empty space */}
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <ScrollView
             contentContainerStyle={styles.scrollContainer}
             showsVerticalScrollIndicator={true}
-            keyboardShouldPersistTaps="handled" // Allows tapping the submit button while keyboard is open
+            keyboardShouldPersistTaps="handled"
           >
             {submitted ? (
               <View style={styles.successContainer}>
@@ -53,14 +68,12 @@ export default function EstimateScreen() {
                   ESTIMATE REQUEST RECEIVED{"\n\n"}
                   THANK YOU, {submittedName}!
                 </Text>
-
                 <Text style={styles.successSubtext}>
                   Your request has been successfully submitted to GUTZ N SHELL.
                   {"\n\n"}
                   We’ll review your vehicle and service details and get back to
                   you soon.
                 </Text>
-
                 <Pressable
                   style={styles.homeButton}
                   onPress={() => router.replace("/")}
@@ -71,19 +84,13 @@ export default function EstimateScreen() {
             ) : (
               <>
                 <Text style={styles.title}>REQUEST AN ESTIMATE</Text>
-
                 <Text style={styles.subtitle}>
                   Tell us about your vehicle and the interior work you need.
                 </Text>
 
-                {service && (
-                  <Text style={styles.selectedService}>
-                    SELECTED SERVICE: {service}
-                  </Text>
-                )}
-
                 <TextInput
                   placeholder="ENTER YOUR NAME"
+                  placeholderTextColor="#6f90ba"
                   style={styles.input}
                   value={name}
                   onChangeText={setName}
@@ -91,14 +98,16 @@ export default function EstimateScreen() {
 
                 <TextInput
                   placeholder="VEHICLE YEAR"
+                  placeholderTextColor="#6f90ba"
                   style={styles.input}
                   value={year}
                   onChangeText={setYear}
-                  keyboardType="numeric" // Better UX for typing years
+                  keyboardType="numeric"
                 />
 
                 <TextInput
                   placeholder="VEHICLE MAKE"
+                  placeholderTextColor="#6f90ba"
                   style={styles.input}
                   value={make}
                   onChangeText={setMake}
@@ -106,21 +115,50 @@ export default function EstimateScreen() {
 
                 <TextInput
                   placeholder="VEHICLE MODEL"
+                  placeholderTextColor="#6f90ba"
                   style={styles.input}
                   value={model}
                   onChangeText={setModel}
                 />
 
-                <TextInput
-                  placeholder="SERVICE NEEDED"
+                {service ? (
+                  <Text style={styles.selectedServiceLabel}>
+                    SELECTED SERVICE:{" "}
+                    {service === "OTHER" && customService
+                      ? customService
+                      : service}
+                  </Text>
+                ) : null}
+
+                <Pressable
                   style={styles.selectedServiceInput}
-                  value={service}
-                  onChangeText={setService}
-                  editable={true} // Allow editing in case the user wants to change it
-                />
+                  onPress={() => setServiceMenuOpen(!serviceMenuOpen)}
+                >
+                  <Text
+                    style={
+                      service
+                        ? styles.typedInputText
+                        : styles.placeholderServiceText
+                    }
+                  >
+                    {service || "SERVICE NEEDED"}
+                  </Text>
+                </Pressable>
+
+                {service === "OTHER" && (
+                  <TextInput
+                    placeholder="SPECIFY SERVICE NEEDED"
+                    placeholderTextColor="#6f90ba"
+                    style={styles.input}
+                    value={customService}
+                    onChangeText={setCustomService}
+                    autoFocus={true}
+                  />
+                )}
 
                 <TextInput
                   placeholder="PHONE NUMBER"
+                  placeholderTextColor="#6f90ba"
                   style={styles.input}
                   value={phone}
                   onChangeText={setPhone}
@@ -129,19 +167,23 @@ export default function EstimateScreen() {
 
                 <TextInput
                   placeholder="EMAIL ADDRESS"
+                  placeholderTextColor="#6f90ba"
                   style={styles.input}
                   value={email}
                   onChangeText={setEmail}
                   keyboardType="email-address"
-                  autoCapitalize="none" // Stops keyboard from forcing uppercase on email
+                  autoCapitalize="none"
                 />
 
                 <TextInput
                   placeholder="DESCRIBE THE WORK NEEDED"
+                  placeholderTextColor="#6f90ba"
                   style={styles.messageInput}
                   value={details}
                   onChangeText={setDetails}
-                  multiline
+                  multiline={true}
+                  blurOnSubmit={true}
+                  returnKeyType="done"
                 />
 
                 <Pressable
@@ -151,75 +193,79 @@ export default function EstimateScreen() {
                       alert("Please enter your name.");
                       return;
                     }
-
                     if (!year || !make || !model) {
                       alert("Please enter your complete vehicle information.");
                       return;
                     }
 
-                    const estimateRequest = {
-                      name,
-                      year,
-                      make,
-                      model,
-                      service,
-                      phone,
-                      email,
-                      details,
-                      submittedAt: new Date().toISOString(),
-                    };
+                    const finalService =
+                      service === "OTHER" ? `OTHER: ${customService}` : service;
 
                     const { error } = await supabase
                       .from("estimate_requests")
                       .insert({
-                        name: estimateRequest.name,
-                        year: estimateRequest.year,
-                        make: estimateRequest.make,
-                        model: estimateRequest.model,
-                        service: estimateRequest.service,
-                        phone: estimateRequest.phone,
-                        email: estimateRequest.email,
-                        details: estimateRequest.details,
-                        submitted_at: estimateRequest.submittedAt,
+                        name,
+                        year,
+                        make,
+                        model,
+                        service: finalService,
+                        phone,
+                        email,
+                        details,
+                        submitted_at: new Date().toISOString(),
                       });
 
                     if (error) {
                       console.error(error);
-                      alert(
-                        "There was a problem submitting your estimate. Please try again.",
-                      );
-                      return;
+                      alert("Submission failed. Please try again.");
+                    } else {
+                      setSubmittedName(name);
+                      setSubmitted(true);
                     }
-
-                    alert(
-                      `ESTIMATE REQUEST RECEIVED\n\n` +
-                        `Customer: ${estimateRequest.name}\n` +
-                        `Vehicle: ${estimateRequest.year} ${estimateRequest.make} ${estimateRequest.model}\n` +
-                        `Service: ${estimateRequest.service}`,
-                    );
-
-                    setSubmittedName(name);
-                    setSubmitted(true);
-
-                    setName("");
-                    setYear("");
-                    setMake("");
-                    setModel("");
-                    setService("");
-                    setPhone("");
-                    setEmail("");
-                    setDetails("");
                   }}
                 >
-                  <Text style={styles.submitButtonText}>
-                    SUBMIT ESTIMATE REQUEST
-                  </Text>
+                  <Text style={styles.submitButtonText}>SUBMIT REQUEST</Text>
                 </Pressable>
               </>
             )}
           </ScrollView>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
+
+      <Modal
+        visible={serviceMenuOpen}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setServiceMenuOpen(false)}
+      >
+        <Pressable
+          style={styles.modalOverlay}
+          onPress={() => setServiceMenuOpen(false)}
+        >
+          <TouchableWithoutFeedback>
+            <View style={styles.dropdownModalContainer}>
+              <View style={styles.dragIndicator} />
+              <ScrollView style={styles.serviceDropdown} bounces={false}>
+                {serviceOptions.map((option) => (
+                  <Pressable
+                    key={option}
+                    style={styles.serviceOption}
+                    onPress={() => {
+                      setService(option);
+                      setServiceMenuOpen(false);
+                      if (option !== "OTHER") {
+                        setCustomService("");
+                      }
+                    }}
+                  >
+                    <Text style={styles.serviceOptionText}>{option}</Text>
+                  </Pressable>
+                ))}
+              </ScrollView>
+            </View>
+          </TouchableWithoutFeedback>
+        </Pressable>
+      </Modal>
     </>
   );
 }
@@ -227,113 +273,168 @@ export default function EstimateScreen() {
 const styles = StyleSheet.create({
   keyboardContainer: {
     flex: 1,
-    backgroundColor: "000000db",
+    backgroundColor: "#000",
   },
   scrollContainer: {
-    flexGrow: 1,
-    alignItems: "center",
-    padding: 20,
+    paddingTop: 20,
+    paddingHorizontal: 20,
+    // FIX: Added dedicated bottom space padding so the submit button
+    // clears the keyboard margin and stands up fully accessible on maximum scroll.
     paddingBottom: 80,
-    backgroundColor: "#000000db",
+    backgroundColor: "#000",
+    flexGrow: 1,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#b4b9be",
+    textAlign: "center",
+    marginTop: 10,
+    marginBottom: 5,
+  },
+  subtitle: {
+    fontSize: 14,
+    color: "#6f90ba",
+    textAlign: "center",
+    marginBottom: 25,
+  },
+  selectedServiceLabel: {
+    fontSize: 13,
+    fontWeight: "bold",
+    color: "#b4b9be",
+    marginBottom: 5,
+    marginLeft: 4,
+    letterSpacing: 0.5,
+  },
+  input: {
+    backgroundColor: "#111",
+    borderWidth: 1,
+    borderColor: "#2a2a2a",
+    borderRadius: 10,
+    color: "#f3f5f7",
+    paddingHorizontal: 14,
+    paddingVertical: 14,
+    fontSize: 14,
+    fontWeight: "600",
+    marginBottom: 14,
+  },
+  selectedServiceInput: {
+    backgroundColor: "#111",
+    borderWidth: 1,
+    borderColor: "#2a2a2a",
+    borderRadius: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 14,
+    marginBottom: 14,
+  },
+  placeholderServiceText: {
+    color: "#6f90ba",
+    fontSize: 14,
+    fontWeight: "600",
+  },
+  typedInputText: {
+    color: "#f3f5f7",
+    fontSize: 14,
+    fontWeight: "600",
+  },
+  messageInput: {
+    backgroundColor: "#111",
+    borderWidth: 1,
+    borderColor: "#2a2a2a",
+    borderRadius: 10,
+    color: "#f3f5f7",
+    paddingHorizontal: 14,
+    paddingVertical: 14,
+    fontSize: 14,
+    minHeight: 120,
+    textAlignVertical: "top",
+    marginBottom: 18,
+  },
+  submitButton: {
+    backgroundColor: "#6f90ba",
+    borderRadius: 12,
+    paddingVertical: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 8,
+    marginBottom: 28,
+  },
+  submitButtonText: {
+    color: "#0d1320",
+    fontSize: 15,
+    fontWeight: "bold",
+    letterSpacing: 1,
   },
   successContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    width: "100%",
-    borderRadius: 18,
-    backgroundColor: "#000000db",
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginTop: 20,
-    color: "#6f90ba",
-  },
-  subtitle: {
-    fontSize: 16,
-    marginTop: 4,
-    textAlign: "center",
-    marginBottom: 10,
-    color: "#b4b9be",
-  },
-  input: {
-    width: "100%",
-    height: 48,
-    borderWidth: 1,
-    borderColor: "#6f90ba",
-    borderRadius: 6,
-    marginTop: 12,
-    padding: 10,
-    backgroundColor: "#dfdede",
-  },
-  messageInput: {
-    width: "100%",
-    height: 100,
-    borderWidth: 1,
-    borderColor: "#6f90ba",
-    borderRadius: 6,
-    marginTop: 12,
-    padding: 10,
-    textAlignVertical: "top",
-    backgroundColor: "#dfdede",
-  },
-  submitButton: {
-    width: "100%",
-    padding: 14,
-    marginTop: 20,
-    borderRadius: 10,
-    backgroundColor: "#6f90ba",
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  submitButtonText: {
-    fontSize: 16,
-    fontWeight: "bold",
+    paddingHorizontal: 24,
+    paddingVertical: 40,
   },
   successMessage: {
-    fontSize: 20,
+    color: "#f3f5f7",
+    fontSize: 22,
     fontWeight: "bold",
     textAlign: "center",
-    marginBottom: 20,
-    color: "#b4b9be",
+    lineHeight: 30,
   },
   successSubtext: {
+    color: "#a9b5c2",
     fontSize: 15,
-    lineHeight: 23,
     textAlign: "center",
-    marginTop: 15,
-    marginBottom: 25,
-    color: "#b4b9be",
+    marginTop: 20,
+    lineHeight: 22,
   },
   homeButton: {
-    width: "55%",
-    padding: 12,
-    borderRadius: 10,
     backgroundColor: "#6f90ba",
+    borderRadius: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    marginTop: 28,
     alignItems: "center",
   },
   homeButtonText: {
-    fontSize: 16,
+    color: "#0d1320",
+    fontSize: 14,
     fontWeight: "bold",
+    letterSpacing: 1,
   },
-
-  selectedService: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginTop: 15,
-    textAlign: "center",
-    color: "#6f90ba",
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "flex-end",
+    backgroundColor: "rgba(0,0,0,0.5)",
   },
-
-  selectedServiceInput: {
-    width: "100%",
-    height: 40,
-    borderWidth: 2,
-    marginTop: 12,
-    padding: 10,
-    fontWeight: "bold",
-    backgroundColor: "#f4f4f4",
+  dropdownModalContainer: {
+    backgroundColor: "#111",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    paddingHorizontal: 12,
+    paddingTop: 10,
+    paddingBottom: 20,
+    maxHeight: "70%",
+  },
+  dragIndicator: {
+    width: 44,
+    height: 5,
+    borderRadius: 3,
+    backgroundColor: "#6f90ba",
+    alignSelf: "center",
+    marginBottom: 10,
+  },
+  serviceDropdown: {
+    maxHeight: 360,
+  },
+  serviceOption: {
+    paddingVertical: 14,
+    paddingHorizontal: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "#1f2d3d",
+  },
+  serviceOptionText: {
+    color: "#f3f5f7",
+    fontSize: 14,
+    fontWeight: "600",
+    letterSpacing: 0.3,
   },
 });

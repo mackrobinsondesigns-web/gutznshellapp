@@ -1,5 +1,5 @@
-import { ScrollView, Text, StyleSheet } from "react-native";
-import { Stack } from "expo-router";
+import { ScrollView, Text, StyleSheet, Pressable } from "react-native";
+import { Stack, router } from "expo-router";
 
 export default function SeatRepairScreen() {
   return (
@@ -52,6 +52,13 @@ export default function SeatRepairScreen() {
           Complete custom reupholstery, premium materials and luxury interior
           finishes.
         </Text>
+
+        <Pressable
+          style={styles.estimateButton}
+          onPress={() => router.push("/estimate")}
+        >
+          <Text style={styles.estimateButtonText}>REQUEST AN ESTIMATE</Text>
+        </Pressable>
       </ScrollView>
     </>
   );
@@ -62,7 +69,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 25,
     backgroundColor: "#000000db",
-    alignItems: "center",
   },
 
   contentContainer: {
@@ -74,7 +80,7 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontWeight: "bold",
     textAlign: "center",
-    color: "#b4b9be",
+    color: "#6f90ba",
     marginTop: 30,
   },
 
@@ -82,7 +88,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "bold",
     textAlign: "center",
-    color: "#b4b9be",
+    color: "#6f90ba",
     marginTop: 12,
   },
 
@@ -98,7 +104,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
-    color: "#b4b9be",
+    color: "#6f90ba",
     marginTop: 35,
   },
 
@@ -114,7 +120,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     textAlign: "center",
-    color: "#b4b9be",
+    color: "#6f90ba",
     marginTop: 25,
   },
 
@@ -124,5 +130,22 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#b4b9be",
     marginTop: 8,
+  },
+
+  estimateButton: {
+    marginTop: 35,
+    marginBottom: 60,
+    paddingVertical: 16,
+    paddingHorizontal: 30,
+    borderWidth: 2,
+    borderColor: "#b4b9be",
+    borderRadius: 10,
+  },
+
+  estimateButtonText: {
+    color: "#6f90ba",
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });

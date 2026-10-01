@@ -1,22 +1,24 @@
+import { SafeAreaView } from "react-native-safe-area-context";
+import React from "react";
 import {
   View,
-  Text,
+  Text, // Added missing import
+  Pressable, // Added missing import
   StyleSheet,
-  Pressable,
   Image,
   TouchableOpacity,
 } from "react-native";
 import { router } from "expo-router";
-import * as WebBrowser from "expo-web-browser";
 
-export default function HomeScreen() {
-  const handlePress = async () => {
-    await WebBrowser.openBrowserAsync("https://gutznshell.com/");
+export default function HomeScreen(): React.JSX.Element {
+  const handlePress = (): void => {
+    // Navigates to your internal app window containing the website
+    router.push("/website");
   };
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={handlePress}>
+      <TouchableOpacity onPress={handlePress} activeOpacity={0.7}>
         <Image
           source={require("../../assets/images/gutz-n-shell-logo.png")}
           style={styles.logo}

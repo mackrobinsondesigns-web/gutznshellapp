@@ -1,38 +1,71 @@
-import { Stack } from "expo-router";
+import React from "react";
+import { Stack, ThemeProvider, DarkTheme } from "expo-router";
+// 1. IMPORT THE NATIVE SYSTEM ENGINE TOOL
+import * as SystemUI from "expo-system-ui";
 
-export default function RootLayout() {
+// 2. RUN THIS IMMEDIATELY OUTSIDE THE COMPONENT (Forces Android/iOS window frame to black)
+SystemUI.setBackgroundColorAsync("#000000");
+
+const CustomBlackTheme = {
+  ...DarkTheme,
+  colors: {
+    ...DarkTheme.colors,
+    background: "#000000",
+    card: "#000000",
+  },
+};
+
+export default function RootLayout(): React.JSX.Element {
   return (
-    <Stack
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: "#000000",
-        },
-        headerTintColor: "#b4b9be",
-        headerTitleStyle: {
-          fontWeight: "bold",
-        },
-      }}
-    >
-      {/* 1. Home Screen (Matches your index file) */}
-      <Stack.Screen name="index" options={{ title: "GUTZ N SHELL" }} />
-
-      {/* 2. Services Screen - Custom Fade */}
-      <Stack.Screen
-        name="services"
-        options={{
-          title: "../../assets/images/our-services.png",
-          animation: "fade", // Smooth opacity transition
+    <ThemeProvider value={CustomBlackTheme}>
+      <Stack
+        screenOptions={{
+          animation: "slide_from_right",
+          animationDuration: 250,
+          contentStyle: { backgroundColor: "#000000" },
+          headerStyle: {
+            backgroundColor: "#000000",
+          },
+          headerTintColor: "#b4b9be",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
         }}
-      />
+      >
+        <Stack.Screen name="index" options={{ title: "GUTZ N SHELL" }} />
 
-      {/* 3. Estimate Request Screen - Custom Flip */}
-      <Stack.Screen
-        name="estimate"
-        options={{
-          title: "estimate",
-          animation: "fade", // Smooth opacity transition
-        }}
-      />
-    </Stack>
+        <Stack.Screen
+          name="seat-repair"
+          options={{
+            title: "Seat Repair",
+            animation: "slide_from_bottom",
+          }}
+        />
+
+        <Stack.Screen
+          name="estimate"
+          options={{
+            title: "Estimate",
+            animation: "slide_from_bottom",
+          }}
+        />
+
+        <Stack.Screen
+          name="services"
+          options={{
+            title: "Our Services",
+            animation: "slide_from_bottom",
+          }}
+        />
+
+        <Stack.Screen
+          name="website"
+          options={{
+            headerShown: false,
+            contentStyle: { backgroundColor: "#000000" },
+          }}
+        />
+      </Stack>
+    </ThemeProvider>
   );
 }

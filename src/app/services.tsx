@@ -56,6 +56,7 @@ export default function ServicesScreen() {
               pathname: "/estimate",
               params: {
                 service: "SEAT REPAIR — BASIC",
+                from: "services",
               },
             })
           }
