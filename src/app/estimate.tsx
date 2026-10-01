@@ -59,7 +59,7 @@ export default function EstimateScreen() {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <ScrollView
             contentContainerStyle={styles.scrollContainer}
-            showsVerticalScrollIndicator={true}
+            showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps="handled"
           >
             {submitted ? (
@@ -201,26 +201,33 @@ export default function EstimateScreen() {
                     const finalService =
                       service === "OTHER" ? `OTHER: ${customService}` : service;
 
-                    const { error } = await supabase
-                      .from("estimate_requests")
-                      .insert({
-                        name,
-                        year,
-                        make,
-                        model,
-                        service: finalService,
-                        phone,
-                        email,
-                        details,
-                        submitted_at: new Date().toISOString(),
-                      });
+                    try {
+                      // Standard insertion (This works perfectly on mobile AND web browsers automatically)
+                      const { error } = await supabase
+                        .from("estimate_requests")
+                        .insert({
+                          name,
+                          year,
+                          make,
+                          model,
+                          service: finalService,
+                          phone,
+                          email,
+                          details,
+                          submitted_at: new Date().toISOString(),
+                        });
 
-                    if (error) {
-                      console.error(error);
-                      alert("Submission failed. Please try again.");
-                    } else {
+                      if (error) throw error;
+
                       setSubmittedName(name);
                       setSubmitted(true);
+                    } catch (error: any) {
+                      console.error(error);
+
+                      // Web browsers handle native alerts perfectly, but you can also log them cleanly:
+                      alert(
+                        "Submission failed. Please check your connection and try again.",
+                      );
                     }
                   }}
                 >
@@ -245,7 +252,11 @@ export default function EstimateScreen() {
           <TouchableWithoutFeedback>
             <View style={styles.dropdownModalContainer}>
               <View style={styles.dragIndicator} />
-              <ScrollView style={styles.serviceDropdown} bounces={false}>
+              <ScrollView
+                style={styles.serviceDropdown}
+                bounces={false}
+                showsVerticalScrollIndicator={false}
+              >
                 {serviceOptions.map((option) => (
                   <Pressable
                     key={option}
@@ -274,16 +285,30 @@ const styles = StyleSheet.create({
   keyboardContainer: {
     flex: 1,
     backgroundColor: "#000",
+    // Centering alignment forces desktop viewports to stay centered
+    alignItems: "center",
   },
   scrollContainer: {
     paddingTop: 20,
     paddingHorizontal: 20,
-    // FIX: Added dedicated bottom space padding so the submit button
-    // clears the keyboard margin and stands up fully accessible on maximum scroll.
     paddingBottom: 80,
     backgroundColor: "#000",
     flexGrow: 1,
+    width: "100%",
+    ...Platform.select({
+      web: {
+        maxWidth: 500,
+        alignSelf: "center",
+        scrollbarWidth: "none",
+        msOverflowStyle: "none",
+        overflowY: "scroll",
+        "&::-webkit-scrollbar": {
+          display: "none",
+        },
+      },
+    }),
   },
+
   title: {
     fontSize: 24,
     fontWeight: "bold",
@@ -413,6 +438,12 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 20,
     maxHeight: "70%",
+    ...Platform.select({
+      web: {
+        maxWidth: 500,
+        alignSelf: "center",
+      },
+    }),
   },
   dragIndicator: {
     width: 44,

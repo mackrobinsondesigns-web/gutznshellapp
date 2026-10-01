@@ -1,4 +1,10 @@
-import { ScrollView, Text, StyleSheet, Pressable } from "react-native";
+import {
+  ScrollView,
+  Text,
+  StyleSheet,
+  Pressable,
+  Platform,
+} from "react-native";
 import { Stack, router } from "expo-router";
 
 export default function SeatRepairScreen() {
@@ -13,6 +19,7 @@ export default function SeatRepairScreen() {
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
       >
         <Text style={styles.title}>SEAT REPAIR & UPHOLSTERY</Text>
 
@@ -69,6 +76,12 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 25,
     backgroundColor: "#000000db",
+    ...Platform.select({
+      web: {
+        maxWidth: 500,
+        alignSelf: "center",
+      },
+    }),
   },
 
   contentContainer: {

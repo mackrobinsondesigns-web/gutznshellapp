@@ -1,4 +1,11 @@
-import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Pressable,
+  Platform,
+} from "react-native";
 import { router, Stack } from "expo-router";
 
 type ServicePackageProps = {
@@ -16,10 +23,12 @@ function ServicePackage({
 }: ServicePackageProps) {
   return (
     <Pressable style={styles.packageCard} onPress={onPress}>
+      {/* Centered header package text */}
       <Text style={styles.packageText}>
         {name} — {price}
       </Text>
       {description ? (
+        /* Centered package description text */
         <Text style={styles.packageDescription}>{description}</Text>
       ) : null}
     </Pressable>
@@ -28,13 +37,16 @@ function ServicePackage({
 
 export default function ServicesScreen() {
   return (
-    <>
+    <View style={styles.mainWrapper}>
       <Stack.Screen
         options={{
           title: "OUR SERVICES",
         }}
       />
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}
+      >
         <Text style={styles.title}>OUR SERVICES</Text>
 
         <Text style={styles.subtitle}>
@@ -296,7 +308,7 @@ export default function ServicesScreen() {
         <ServicePackage
           name="BASIC"
           price="$200+"
-          description="Basic convertible top service."
+          description="Basic convertible top inspection and minor adjustments."
           onPress={() =>
             router.push({
               pathname: "/estimate",
@@ -306,221 +318,81 @@ export default function ServicesScreen() {
             })
           }
         />
-
-        <ServicePackage
-          name="STANDARD"
-          price="$750+"
-          description="Full convertible top service, custom finishes."
-          onPress={() =>
-            router.push({
-              pathname: "/estimate",
-              params: {
-                service: "CONVERTIBLE TOP SERVICES — STANDARD",
-              },
-            })
-          }
-        />
-
-        <ServicePackage
-          name="PREMIUM"
-          price="$1,500+"
-          description="Complete custom convertible top service & premium materials."
-          onPress={() =>
-            router.push({
-              pathname: "/estimate",
-              params: {
-                service: "CONVERTIBLE TOP SERVICES — PREMIUM",
-              },
-            })
-          }
-        />
-
-        <Text style={styles.serviceTitle}>CUSTOM UPGRADES</Text>
-
-        <Text style={styles.serviceText}>
-          Personalize your interior with premium custom upgrades and finishes.
-        </Text>
-
-        <ServicePackage
-          name="DIAMOND STITCHING"
-          price="$500+"
-          description="Custom diamond stitching for a luxurious look."
-          onPress={() =>
-            router.push({
-              pathname: "/estimate",
-              params: {
-                service: "CUSTOM UPGRADES — DIAMOND STITCHING",
-              },
-            })
-          }
-        />
-
-        <ServicePackage
-          name="TWO-TONE UPHOLSTERY"
-          price="$750+"
-          description="Custom two-tone upholstery for a unique look."
-          onPress={() =>
-            router.push({
-              pathname: "/estimate",
-              params: {
-                service: "CUSTOM UPGRADES — TWO-TONE UPHOLSTERY",
-              },
-            })
-          }
-        />
-
-        <ServicePackage
-          name="PREMIUM LEATHER"
-          price="$1,000+"
-          description="Premium leather seating for a luxurious feel."
-          onPress={() =>
-            router.push({
-              pathname: "/estimate",
-              params: {
-                service: "CUSTOM UPGRADES — PREMIUM LEATHER",
-              },
-            })
-          }
-        />
-
-        <ServicePackage
-          name="CUSTOM EMBROIDERY"
-          price="$75+"
-          description="Custom embroidery for a personalized touch."
-          onPress={() =>
-            router.push({
-              pathname: "/estimate",
-              params: {
-                service: "CUSTOM UPGRADES — CUSTOM EMBROIDERY",
-              },
-            })
-          }
-        />
-
-        <ServicePackage
-          name="CUSTOM TRUNK UPHOLSTERY"
-          price="$750+"
-          description="Custom trunk upholstery for a cohesive look."
-          onPress={() =>
-            router.push({
-              pathname: "/estimate",
-              params: {
-                service: "CUSTOM UPGRADES — CUSTOM TRUNK UPHOLSTERY",
-              },
-            })
-          }
-        />
-
-        <ServicePackage
-          name="SOUND DEADENING"
-          price="$500+"
-          description="Complete sound deadening for a quieter ride."
-          onPress={() =>
-            router.push({
-              pathname: "/estimate",
-              params: {
-                service: "CUSTOM UPGRADES — SOUND DEADENING",
-              },
-            })
-          }
-        />
-
-        <Text style={styles.serviceTitle}>CLASSIC & CUSTOM RESTORATION</Text>
-
-        <Text style={styles.serviceText}>
-          Full interior restoration for classic vehicles, custom builds and
-          premium projects.
-        </Text>
-
-        <ServicePackage
-          name="STANDARD RESTORATION"
-          price="$3,000+"
-          description="Complete interior restoration for classic vehicles."
-          onPress={() =>
-            router.push({
-              pathname: "/estimate",
-              params: {
-                service: "CLASSIC & CUSTOM RESTORATION — STANDARD RESTORATION",
-              },
-            })
-          }
-        />
-
-        <ServicePackage
-          name="PREMIUM COMPLETE INTERIOR"
-          price="$10,000+"
-          description="Complete premium interior restoration for a luxurious feel."
-          onPress={() =>
-            router.push({
-              pathname: "/estimate",
-              params: {
-                service:
-                  "CLASSIC & CUSTOM RESTORATION — PREMIUM COMPLETE INTERIOR",
-              },
-            })
-          }
-        />
       </ScrollView>
-    </>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  mainWrapper: {
+    flex: 1,
+    backgroundColor: "#000000",
     alignItems: "center",
+  },
+  container: {
     padding: 20,
     paddingBottom: 40,
-    backgroundColor: "#000000db",
-  },
-
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    textAlign: "center",
-    color: "#6f90ba",
-  },
-
-  subtitle: {
-    fontSize: 16,
-    marginTop: 15,
-    color: "#b4b9be",
-    textAlign: "center",
-  },
-
-  serviceTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginTop: 30,
-    textAlign: "center",
-    color: "#6f90ba",
-  },
-
-  serviceText: {
-    fontSize: 15,
-    marginTop: 10,
-    textAlign: "center",
-    color: "#b4b9be",
-  },
-
-  packageCard: {
+    backgroundColor: "#000000",
+    flexGrow: 1,
     width: "100%",
-    padding: 15,
+    ...Platform.select({
+      web: {
+        maxWidth: 500,
+        alignSelf: "center",
+      },
+    }),
+  },
+  title: {
+    fontSize: 26,
+    fontWeight: "bold",
+    color: "#b4b9be",
+    textAlign: "center",
     marginTop: 10,
-    borderRadius: 10,
-    backgroundColor: "#6f90ba",
+    marginBottom: 5,
+  },
+  subtitle: {
+    fontSize: 14,
+    color: "#6f90ba",
+    textAlign: "center",
+    marginBottom: 25,
+  },
+  serviceTitle: {
     fontSize: 16,
     fontWeight: "bold",
-    textAlign: "center",
+    color: "#b4b9be",
+    marginTop: 20,
+    marginBottom: 4,
+    letterSpacing: 0.5,
+    textAlign: "center", // Centered category titles
   },
-
+  serviceText: {
+    fontSize: 13,
+    color: "#6f90ba",
+    marginBottom: 12,
+    lineHeight: 18,
+    textAlign: "center", // Centered category subtitles
+  },
+  packageCard: {
+    backgroundColor: "#111111",
+    borderRadius: 6,
+    padding: 15,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: "#222222",
+    alignItems: "center", // Align items horizontally centered inside the card pressable
+    justifyContent: "center",
+  },
   packageText: {
-    fontSize: 16,
+    color: "#b4b9be",
+    fontSize: 14,
     fontWeight: "bold",
     textAlign: "center",
   },
-
   packageDescription: {
-    marginTop: 5,
+    color: "#6f90ba",
+    fontSize: 12,
+    marginTop: 6,
+    lineHeight: 18,
     textAlign: "center",
   },
 });

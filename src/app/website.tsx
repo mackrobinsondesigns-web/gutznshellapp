@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { StyleSheet, View, ActivityIndicator } from "react-native";
+import { StyleSheet, View, ActivityIndicator, Platform } from "react-native"; // Added Platform
 import { SafeAreaView } from "react-native-safe-area-context";
 import { WebView } from "react-native-webview";
 import { Stack } from "expo-router";
 
 export default function WebsiteScreen(): React.JSX.Element {
-  // State to track if the web view has completed its initial render paint
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   const LoadingIndicatorView = () => (
@@ -33,19 +32,32 @@ export default function WebsiteScreen(): React.JSX.Element {
         }}
       />
 
-      <WebView
-        source={{ uri: "https://gutznshell.com" }}
-        originWhitelist={["*"]}
-        // FIX 1: Keeps the webview invisible (opacity 0) while it boots up,
-        // preventing the white rendering engine canvas from ever flashing on screen.
-        style={[styles.webview, { opacity: isLoaded ? 1 : 0 }]}
-        // FIX 2: Forces the immediate underlying wrapper frame layer to stay pitch black
-        containerStyle={styles.webviewContainer}
-        startInLoadingState={true}
-        renderLoading={LoadingIndicatorView}
-        // Triggers once the first layout page finishes painting pixels
-        onLoadEnd={() => setIsLoaded(true)}
-      />
+      {/* Conditionally renders an iframe on Web browsers or a WebView on Native Devices */}
+      {Platform.OS === "web" ? (
+        <View style={styles.webviewContainer}>
+          <iframe
+            src="https://gutznshell.com"
+            style={{
+              flex: 1,
+              border: "none",
+              width: "100%",
+              height: "100%",
+              backgroundColor: "#000000",
+            }}
+            onLoad={() => setIsLoaded(true)}
+          />
+        </View>
+      ) : (
+        <WebView
+          source={{ uri: "https://gutznshell.com" }}
+          originWhitelist={["*"]}
+          style={[styles.webview, { opacity: isLoaded ? 1 : 0 }]}
+          containerStyle={styles.webviewContainer}
+          startInLoadingState={true}
+          renderLoading={LoadingIndicatorView}
+          onLoadEnd={() => setIsLoaded(true)}
+        />
+      )}
     </SafeAreaView>
   );
 }
@@ -57,10 +69,11 @@ const styles = StyleSheet.create({
   },
   webview: {
     flex: 1,
-    backgroundColor: "#000000", // Forces the internal browser engine canvas black
+    backgroundColor: "#000000",
   },
   webviewContainer: {
-    backgroundColor: "#000000", // Forces the external native layout box black
+    flex: 1, // Ensures the iframe wrapper dynamically captures full height on web targets
+    backgroundColor: "#000000",
   },
   loadingContainer: {
     position: "absolute",
