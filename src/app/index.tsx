@@ -6,20 +6,18 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
-  ScrollView, // Added for cross-platform scroll safety
-  Platform, // Added for web-specific browser styling
+  ScrollView,
+  Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 
 export default function HomeScreen(): React.JSX.Element {
   const handlePress = (): void => {
-    // Navigates to your internal app window containing the website
     router.push("/website");
   };
 
   return (
-    // SafeAreaView handles device notches/status bars cleanly at the root
     <SafeAreaView style={styles.safeAreaContainer}>
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
@@ -74,26 +72,34 @@ export default function HomeScreen(): React.JSX.Element {
 const styles = StyleSheet.create({
   safeAreaContainer: {
     flex: 1,
-    backgroundColor: "#000000db", // Keeps background dark up through structural containers
+    backgroundColor: "#000000db",
+    width: "100%",
+    ...Platform.select({
+      web: {
+        overflowX: "hidden", // FIX: Kills horizontal scrollbars at the structural container level
+      },
+    }),
   },
   scrollContainer: {
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
-    paddingBottom: 40, // Ensures extra clearance for uninstalled web browser tab bars
-    flexGrow: 1, // Automatically turns into a normal webpage wrapper if viewing in normal tabs
+    paddingBottom: 40,
+    flexGrow: 1,
+    width: "100%",
     ...Platform.select({
       web: {
-        // PWA WEB SAFEVIEW EXTENSIONS:
-        userSelect: "none", // Prevents ugly blue text highlights when tapping buttons on desktop web
-        WebkitTouchCallout: "none", // Disables the phone browser's "Save Image" popups on continuous touches
+        overflowX: "hidden", // FIX: Prevents layout bleeding on desktop width changes
+        WebkitTouchCallout: "none",
+        // Note: Removed userSelect: "none" globally from the wrapper here because it can cross-contaminate
+        // secondary pages like your Estimate form, causing text input elements to become unclickable/unselectable.
       },
     }),
   },
   logo: {
     width: 180,
     height: 180,
-    marginTop: 10, // Adjusted layout spacing to work uniformly within the safe scrolling wrapper
+    marginTop: 10,
     marginBottom: 20,
     borderRadius: 20,
   },

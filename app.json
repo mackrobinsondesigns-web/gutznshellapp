@@ -33,7 +33,12 @@
       }
     },
     "plugins": [
-      "expo-router",
+      [
+        "expo-router",
+        {
+          "origin": "https://gutznshell.com"
+        }
+      ],
       [
         "expo-splash-screen",
         {
@@ -47,7 +52,8 @@
     ],
     "experiments": {
       "typedRoutes": true,
-      "reactCompiler": true
+      "reactCompiler": true,
+      "baseUrl": "/estimate-app"
     }
   }
 }
