@@ -19,52 +19,55 @@ export default function HomeScreen(): React.JSX.Element {
 
   return (
     <SafeAreaView style={styles.safeAreaContainer}>
-      <ScrollView
-        contentContainerStyle={styles.scrollContainer}
-        showsVerticalScrollIndicator={false}
-        bounces={true}
-      >
-        <TouchableOpacity onPress={handlePress} activeOpacity={0.7}>
-          <Image
-            source={require("../../assets/images/gutz-n-shell-logo.png")}
-            style={styles.logo}
-          />
-        </TouchableOpacity>
+      {/* Structural desktop wrapper to keep layout centered, crisp, and beautifully aligned on wider displays */}
+      <View style={styles.appShell}>
+        <ScrollView
+          contentContainerStyle={styles.scrollContainer}
+          showsVerticalScrollIndicator={false}
+          bounces={true}
+        >
+          <TouchableOpacity onPress={handlePress} activeOpacity={0.7}>
+            <Image
+              source={require("../../assets/images/gutz-n-shell-logo.png")}
+              style={styles.logo}
+            />
+          </TouchableOpacity>
 
-        <Text style={styles.title}>GUTZ N SHELL</Text>
+          <Text style={styles.title}>GUTZ N SHELL</Text>
 
-        <Text style={styles.subtitle}>
-          PREMIUM AUTOMOTIVE INTERIOR RESTORATION
-        </Text>
+          <Text style={styles.subtitle}>
+            PREMIUM AUTOMOTIVE INTERIOR RESTORATION
+          </Text>
 
-        <Text style={styles.tagline}>
-          REPAIR IT • RESTORE IT • CUSTOMIZE IT
-        </Text>
+          <Text style={styles.tagline}>
+            REPAIR IT • RESTORE IT • CUSTOMIZE IT
+          </Text>
 
-        <Pressable onPress={() => router.push("/seat-repair")}>
-          <Image
-            source={require("../../assets/images/seat-repair.png")}
-            style={styles.repairButtonImage}
-            resizeMode="contain"
-          />
-        </Pressable>
+          <Pressable onPress={() => router.push("/seat-repair")}>
+            <Image
+              source={require("../../assets/images/seat-repair.png")}
+              style={styles.repairButtonImage}
+              resizeMode="contain"
+            />
+          </Pressable>
 
-        <Pressable onPress={() => router.push("/estimate")}>
-          <Image
-            source={require("../../assets/images/request-estimate.png")}
-            style={styles.estimateButtonImage}
-            resizeMode="contain"
-          />
-        </Pressable>
+          <Pressable onPress={() => router.push("/estimate")}>
+            <Image
+              source={require("../../assets/images/request-estimate.png")}
+              style={styles.estimateButtonImage}
+              resizeMode="contain"
+            />
+          </Pressable>
 
-        <Pressable onPress={() => router.push("/services")}>
-          <Image
-            source={require("../../assets/images/our-services.png")}
-            style={styles.servicesButtonImage}
-            resizeMode="contain"
-          />
-        </Pressable>
-      </ScrollView>
+          <Pressable onPress={() => router.push("/services")}>
+            <Image
+              source={require("../../assets/images/our-services.png")}
+              style={styles.servicesButtonImage}
+              resizeMode="contain"
+            />
+          </Pressable>
+        </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
@@ -72,11 +75,22 @@ export default function HomeScreen(): React.JSX.Element {
 const styles = StyleSheet.create({
   safeAreaContainer: {
     flex: 1,
-    backgroundColor: "#000000db",
+    backgroundColor: "#000000", // FIXED: Changed from #000000db to true solid pitch black to prevent browser viewport bleed-through
     width: "100%",
     ...Platform.select({
       web: {
-        overflowX: "hidden", // FIX: Kills horizontal scrollbars at the structural container level
+        overflowX: "hidden",
+      },
+    }),
+  },
+  appShell: {
+    flex: 1,
+    width: "100%",
+    ...Platform.select({
+      web: {
+        maxWidth: 550, // Restricts screen stretch on computer monitors
+        alignSelf: "center", // Centers the entire mobile application viewport on desktop browsers
+        boxShadow: "0 0 40px rgba(0,0,0,0.8)", // Adds a subtle deep premium fade outline on desktop views
       },
     }),
   },
@@ -89,10 +103,8 @@ const styles = StyleSheet.create({
     width: "100%",
     ...Platform.select({
       web: {
-        overflowX: "hidden", // FIX: Prevents layout bleeding on desktop width changes
+        overflowX: "hidden",
         WebkitTouchCallout: "none",
-        // Note: Removed userSelect: "none" globally from the wrapper here because it can cross-contaminate
-        // secondary pages like your Estimate form, causing text input elements to become unclickable/unselectable.
       },
     }),
   },

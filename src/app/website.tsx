@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View, ActivityIndicator, Platform } from "react-native"; // Added Platform
+import { StyleSheet, View, ActivityIndicator, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { WebView } from "react-native-webview";
 import { Stack } from "expo-router";
@@ -32,32 +32,34 @@ export default function WebsiteScreen(): React.JSX.Element {
         }}
       />
 
-      {/* Conditionally renders an iframe on Web browsers or a WebView on Native Devices */}
-      {Platform.OS === "web" ? (
-        <View style={styles.webviewContainer}>
+      <View style={styles.webviewContainer}>
+        {/* Manually render the loading spinner for Web users until onLoad triggers */}
+        {!isLoaded && <LoadingIndicatorView />}
+
+        {Platform.OS === "web" ? (
           <iframe
             src="https://gutznshell.com"
             style={{
-              flex: 1,
               border: "none",
               width: "100%",
               height: "100%",
               backgroundColor: "#000000",
+              display: isLoaded ? "block" : "none", // Keeps hidden while loading to prevent flashes
             }}
             onLoad={() => setIsLoaded(true)}
           />
-        </View>
-      ) : (
-        <WebView
-          source={{ uri: "https://gutznshell.com" }}
-          originWhitelist={["*"]}
-          style={[styles.webview, { opacity: isLoaded ? 1 : 0 }]}
-          containerStyle={styles.webviewContainer}
-          startInLoadingState={true}
-          renderLoading={LoadingIndicatorView}
-          onLoadEnd={() => setIsLoaded(true)}
-        />
-      )}
+        ) : (
+          <WebView
+            source={{ uri: "https://gutznshell.com" }}
+            originWhitelist={["*"]}
+            style={[styles.webview, { opacity: isLoaded ? 1 : 0 }]}
+            containerStyle={styles.webviewContainer}
+            startInLoadingState={true}
+            renderLoading={LoadingIndicatorView}
+            onLoadEnd={() => setIsLoaded(true)}
+          />
+        )}
+      </View>
     </SafeAreaView>
   );
 }
@@ -72,7 +74,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#000000",
   },
   webviewContainer: {
-    flex: 1, // Ensures the iframe wrapper dynamically captures full height on web targets
+    flex: 1,
+    position: "relative", // Required to absolute position the loading indicator properly on top
     backgroundColor: "#000000",
   },
   loadingContainer: {
@@ -84,5 +87,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#000000",
+    zIndex: 1, // Ensures it stays stacked directly over the web iframe
   },
 });
