@@ -1,23 +1,22 @@
-import { router, useLocalSearchParams, Stack } from "expo-router";
+import { router, Stack, useLocalSearchParams } from "expo-router";
+import { useEffect, useRef, useState } from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
+  ActivityIndicator,
+  Animated,
+  FlatList,
+  Image,
+  Keyboard,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
   Pressable,
   ScrollView,
-  KeyboardAvoidingView,
-  Platform,
-  TouchableWithoutFeedback,
-  Keyboard,
-  Modal,
-  ActivityIndicator,
-  FlatList,
-  Animated,
-  Image,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useState, useRef, useEffect } from "react";
 import { supabase } from "../lib/supabase";
 
 const serviceOptions = [
@@ -44,6 +43,18 @@ const themes = {
     accent: "#007bff",
     modalBackground: "rgba(0, 0, 0, 0.85)",
   },
+  CRIMSON_CARBON: {
+    name: "CRIMSON CARBON",
+    background: "#0a0a0a",
+    surface: "#141414",
+    border: "#262626",
+    textPrimary: "#ffffff",
+    textSecondary: "#a3a3a3",
+    placeholder: "#ba6f6f",
+    accent: "#ff3b30",
+    modalBackground: "rgba(0, 0, 0, 0.85)",
+  },
+
   PLATINUM_LIGHT: {
     name: "PLATINUM LIGHT",
     background: "#f4f6f9",
@@ -60,10 +71,10 @@ const themes = {
     background: "#03000a",
     surface: "#0d0214",
     border: "#39005c",
-    textPrimary: "#00ffccd4",
+    textPrimary: "#00ffcccc",
     textSecondary: "#ff007f",
     placeholder: "#bc00dd",
-    accent: "#00ffccc6",
+    accent: "#00ffccc3",
     modalBackground: "rgba(3, 0, 10, 0.9)",
   },
   WARM_VINTAGE: {
@@ -82,10 +93,10 @@ const themes = {
     background: "#020c1b",
     surface: "#0a192f",
     border: "#172a45",
-    textPrimary: "#64ffdbe1",
+    textPrimary: "#64ffdbd8",
     textSecondary: "#8892b0",
     placeholder: "#4c5c75",
-    accent: "#64ffdbaf",
+    accent: "#64ffdbc0",
     modalBackground: "rgba(2, 12, 27, 0.85)",
   },
 };
@@ -114,7 +125,6 @@ export default function EstimateScreen(): React.JSX.Element {
   const [email, setEmail] = useState<string>("");
   const [details, setDetails] = useState<string>("");
 
-  // UX State variables
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [showLoadingAnimation, setShowLoadingAnimation] =
     useState<boolean>(false);
@@ -122,10 +132,27 @@ export default function EstimateScreen(): React.JSX.Element {
   const [submittedName, setSubmittedName] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  // Animation values
   const logoOpacity = useRef(new Animated.Value(0.3)).current;
+  const cardOpacity = useRef(new Animated.Value(0)).current;
+  const cardTranslateY = useRef(new Animated.Value(40)).current;
 
   const activeColors = themes[activeThemeKey];
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(cardOpacity, {
+        toValue: 1,
+        duration: 450,
+        useNativeDriver: true,
+      }),
+      Animated.spring(cardTranslateY, {
+        toValue: 0,
+        speed: 10,
+        bounciness: 3,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
 
   useEffect(() => {
     if (showLoadingAnimation) {
@@ -133,12 +160,12 @@ export default function EstimateScreen(): React.JSX.Element {
         Animated.sequence([
           Animated.timing(logoOpacity, {
             toValue: 1,
-            duration: 2000,
+            duration: 4000,
             useNativeDriver: true,
           }),
           Animated.timing(logoOpacity, {
             toValue: 0.3,
-            duration: 2000,
+            duration: 4000,
             useNativeDriver: true,
           }),
         ]),
@@ -155,7 +182,6 @@ export default function EstimateScreen(): React.JSX.Element {
   };
 
   const handleSubmit = async () => {
-    // 1. Force the phone typing display completely out of view immediately
     Keyboard.dismiss();
     setErrorMessage("");
 
@@ -195,7 +221,7 @@ export default function EstimateScreen(): React.JSX.Element {
 
       if (error) throw error;
 
-      setSubmittedName(name);
+      setSubmittedName(name.trim());
 
       const elapsedTime = Date.now() - startTime;
       const remainingTime = Math.max(5000 - elapsedTime, 0);
@@ -243,7 +269,7 @@ export default function EstimateScreen(): React.JSX.Element {
           </Animated.View>
           <Text style={styles.loadingText}>PROCESSING REQUEST...</Text>
           <ActivityIndicator
-            size="small"
+            size="large"
             color="#ffffff"
             style={{ marginTop: 20 }}
           />
@@ -252,14 +278,33 @@ export default function EstimateScreen(): React.JSX.Element {
 
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.keyboardContainer}
+        style={[
+          styles.keyboardContainer,
+          Platform.OS === "web" && { flex: 1, height: "auto" }, // Forces browser layout to naturally expand
+        ]}
         keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 24}
+        pointerEvents="box-none" // Bypasses empty structural web node wrappers
       >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <ScrollView
-            contentContainerStyle={styles.scrollContainer}
-            showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps="handled"
+        <ScrollView
+          contentContainerStyle={styles.scrollContainer}
+          keyboardShouldPersistTaps="handled"
+          pointerEvents="auto" // Explicitly grants mouse focus to inner scroll content
+        >
+          <Animated.View
+            style={[
+              styles.formCard,
+              {
+                backgroundColor: activeColors.surface,
+                borderColor: activeColors.border,
+                opacity: cardOpacity,
+                transform: [{ translateY: cardTranslateY }],
+                ...Platform.select({
+                  web: {
+                    userSelect: "text", // Enables native pointer text handling inside the card canvas
+                  },
+                }),
+              },
+            ]}
           >
             {submitted ? (
               <View style={styles.successContainer}>
@@ -325,23 +370,27 @@ export default function EstimateScreen(): React.JSX.Element {
                     {(Object.keys(themes) as ThemeKeys[]).map((key) => (
                       <Pressable
                         key={key}
+                        onPress={() => setActiveThemeKey(key)}
                         style={[
                           styles.themeChip,
                           {
                             backgroundColor: themes[key].surface,
-                            borderColor: themes[key].border,
-                          },
-                          activeThemeKey === key && {
-                            borderColor: activeColors.accent,
-                            borderWidth: 2,
+                            borderColor:
+                              activeThemeKey === key
+                                ? themes[key].accent
+                                : themes[key].border,
                           },
                         ]}
-                        onPress={() => setActiveThemeKey(key)}
                       >
                         <Text
                           style={[
                             styles.themeChipText,
-                            { color: themes[key].textPrimary },
+                            {
+                              color:
+                                activeThemeKey === key
+                                  ? themes[key].textPrimary
+                                  : themes[key].textSecondary,
+                            },
                           ]}
                         >
                           {themes[key].name}
@@ -351,315 +400,236 @@ export default function EstimateScreen(): React.JSX.Element {
                   </ScrollView>
                 </View>
 
-                <Text
-                  style={[styles.title, { color: activeColors.textPrimary }]}
-                  numberOfLines={1}
-                  adjustsFontSizeToFit
-                >
-                  REQUEST AN ESTIMATE
-                </Text>
-                <Text
-                  style={[
-                    styles.subtitle,
-                    { color: activeColors.textSecondary },
-                  ]}
-                >
-                  Tell us about your vehicle and the interior work you need.
-                </Text>
-
-                {errorMessage ? (
+                <View style={styles.fieldGroup}>
                   <Text
                     style={[
-                      styles.errorText,
-                      { color: activeColors.textPrimary },
+                      styles.sectionLabel,
+                      { color: activeColors.textSecondary },
                     ]}
                   >
-                    {errorMessage}
+                    CUSTOMER INFO
                   </Text>
-                ) : null}
+                  <TextInput
+                    style={[
+                      styles.input,
+                      {
+                        backgroundColor: activeColors.background,
+                        borderColor: activeColors.border,
+                        color: activeColors.textPrimary,
+                      },
+                    ]}
+                    placeholder="Full Name"
+                    placeholderTextColor={activeColors.placeholder}
+                    value={name}
+                    onChangeText={setName}
+                    onFocus={clearError}
+                  />
 
-                <View style={styles.formCard}>
-                  <View style={styles.fieldGroup}>
-                    <Text
-                      style={[
-                        styles.label,
-                        { color: activeColors.textSecondary },
-                      ]}
-                    >
-                      NAME
-                    </Text>
-                    <TextInput
-                      value={name}
-                      onChangeText={(text) => {
-                        setName(text);
-                        clearError();
-                      }}
-                      placeholder="Your Name"
-                      placeholderTextColor={activeColors.placeholder}
-                      style={[
-                        styles.input,
-                        {
-                          backgroundColor: activeColors.surface,
-                          borderColor: activeColors.border,
-                          color: activeColors.textPrimary,
-                        },
-                      ]}
-                    />
-                  </View>
-
-                  <View style={styles.fieldRow}>
-                    <View style={styles.inputHalf}>
-                      <Text
-                        style={[
-                          styles.label,
-                          { color: activeColors.textSecondary },
-                        ]}
-                      >
-                        YEAR
-                      </Text>
+                  {/* FIXED: Added explicit layout wrapping to distribute spaces evenly on web targets */}
+                  <View style={styles.inlineFields}>
+                    <View style={{ flex: 1 }}>
                       <TextInput
-                        value={year}
-                        onChangeText={(text) => {
-                          setYear(text);
-                          clearError();
-                        }}
-                        placeholder="2024"
+                        style={[
+                          styles.inputHalf,
+                          {
+                            backgroundColor: activeColors.background,
+                            borderColor: activeColors.border,
+                            color: activeColors.textPrimary,
+                          },
+                        ]}
+                        placeholder="Year"
+                        placeholderTextColor={activeColors.placeholder}
                         keyboardType="numeric"
-                        placeholderTextColor={activeColors.placeholder}
-                        style={[
-                          styles.input,
-                          {
-                            backgroundColor: activeColors.surface,
-                            borderColor: activeColors.border,
-                            color: activeColors.textPrimary,
-                          },
-                        ]}
+                        value={year}
+                        onChangeText={setYear}
+                        onFocus={clearError}
                       />
                     </View>
-
-                    <View style={styles.inputHalf}>
-                      <Text
-                        style={[
-                          styles.label,
-                          { color: activeColors.textSecondary },
-                        ]}
-                      >
-                        MAKE
-                      </Text>
+                    <View style={{ flex: 1 }}>
                       <TextInput
-                        value={make}
-                        onChangeText={(text) => {
-                          setMake(text);
-                          clearError();
-                        }}
-                        placeholder="Chevy"
-                        placeholderTextColor={activeColors.placeholder}
                         style={[
-                          styles.input,
+                          styles.inputHalf,
                           {
-                            backgroundColor: activeColors.surface,
+                            backgroundColor: activeColors.background,
                             borderColor: activeColors.border,
                             color: activeColors.textPrimary,
                           },
                         ]}
+                        placeholder="Make"
+                        placeholderTextColor={activeColors.placeholder}
+                        value={make}
+                        onChangeText={setMake}
+                        onFocus={clearError}
                       />
                     </View>
                   </View>
 
-                  <View style={styles.fieldGroup}>
-                    <Text
-                      style={[
-                        styles.label,
-                        { color: activeColors.textSecondary },
-                      ]}
-                    >
-                      MODEL
-                    </Text>
-                    <TextInput
-                      value={model}
-                      onChangeText={(text) => {
-                        setModel(text);
-                        clearError();
-                      }}
-                      placeholder="Impala"
-                      placeholderTextColor={activeColors.placeholder}
-                      style={[
-                        styles.input,
-                        {
-                          backgroundColor: activeColors.surface,
-                          borderColor: activeColors.border,
-                          color: activeColors.textPrimary,
-                        },
-                      ]}
-                    />
-                  </View>
+                  {/* FIXED: Changed from inputHalf to input style so Model spans the full width, matching Full Name */}
+                  <TextInput
+                    style={[
+                      styles.input,
+                      {
+                        backgroundColor: activeColors.background,
+                        borderColor: activeColors.border,
+                        color: activeColors.textPrimary,
+                      },
+                    ]}
+                    placeholder="Model"
+                    placeholderTextColor={activeColors.placeholder}
+                    value={model}
+                    onChangeText={setModel}
+                    onFocus={clearError}
+                  />
+                </View>
 
+                <View style={styles.fieldGroup}>
+                  <Text
+                    style={[
+                      styles.sectionLabel,
+                      { color: activeColors.textSecondary },
+                    ]}
+                  >
+                    SERVICE
+                  </Text>
                   <Pressable
                     style={[
-                      styles.selectBox,
+                      styles.dropdownButton,
                       {
-                        backgroundColor: activeColors.surface,
+                        backgroundColor: activeColors.background,
                         borderColor: activeColors.border,
                       },
                     ]}
-                    onPress={() => {
-                      clearError();
-                      setServiceMenuOpen(true);
-                    }}
+                    onPress={() => setServiceMenuOpen(true)}
                   >
                     <Text
-                      style={[
-                        styles.label,
-                        { color: activeColors.textSecondary },
-                      ]}
+                      style={{
+                        color: service
+                          ? activeColors.textPrimary
+                          : activeColors.placeholder,
+                      }}
                     >
-                      SERVICE
+                      {service || "Select Service"}
                     </Text>
-                    <Text
-                      style={[
-                        styles.selectValue,
-                        { color: activeColors.textPrimary },
-                      ]}
-                    >
-                      {service || "Select service type"}
-                    </Text>
+                    <Text style={{ color: activeColors.textSecondary }}>▾</Text>
                   </Pressable>
 
-                  {service === "OTHER" ? (
-                    <View style={styles.fieldGroup}>
-                      <Text
-                        style={[
-                          styles.label,
-                          { color: activeColors.textSecondary },
-                        ]}
-                      >
-                        CUSTOM SERVICE DETAILS
-                      </Text>
-                      <TextInput
-                        value={customService}
-                        onChangeText={(text) => {
-                          setCustomService(text);
-                          clearError();
-                        }}
-                        placeholder="Describe the service you need"
-                        placeholderTextColor={activeColors.placeholder}
-                        style={[
-                          styles.input,
-                          {
-                            backgroundColor: activeColors.surface,
-                            borderColor: activeColors.border,
-                            color: activeColors.textPrimary,
-                          },
-                        ]}
-                      />
-                    </View>
-                  ) : null}
-
-                  <View style={styles.fieldRow}>
-                    <View style={styles.inputHalf}>
-                      <Text
-                        style={[
-                          styles.label,
-                          { color: activeColors.textSecondary },
-                        ]}
-                      >
-                        PHONE
-                      </Text>
-                      <TextInput
-                        value={phone}
-                        onChangeText={(text) => {
-                          setPhone(text);
-                          clearError();
-                        }}
-                        placeholder="(555) 123-4567"
-                        keyboardType="phone-pad"
-                        placeholderTextColor={activeColors.placeholder}
-                        style={[
-                          styles.input,
-                          {
-                            backgroundColor: activeColors.surface,
-                            borderColor: activeColors.border,
-                            color: activeColors.textPrimary,
-                          },
-                        ]}
-                      />
-                    </View>
-
-                    <View style={styles.inputHalf}>
-                      <Text
-                        style={[
-                          styles.label,
-                          { color: activeColors.textSecondary },
-                        ]}
-                      >
-                        EMAIL
-                      </Text>
-                      <TextInput
-                        value={email}
-                        onChangeText={(text) => {
-                          setEmail(text);
-                          clearError();
-                        }}
-                        placeholder="you@example.com"
-                        keyboardType="email-address"
-                        autoCapitalize="none"
-                        placeholderTextColor={activeColors.placeholder}
-                        style={[
-                          styles.input,
-                          {
-                            backgroundColor: activeColors.surface,
-                            borderColor: activeColors.border,
-                            color: activeColors.textPrimary,
-                          },
-                        ]}
-                      />
-                    </View>
-                  </View>
-
-                  <View style={styles.fieldGroup}>
-                    <Text
-                      style={[
-                        styles.label,
-                        { color: activeColors.textSecondary },
-                      ]}
-                    >
-                      DETAILS
-                    </Text>
+                  {service === "OTHER" && (
                     <TextInput
-                      value={details}
-                      onChangeText={(text) => {
-                        setDetails(text);
-                        clearError();
-                      }}
-                      placeholder="Tell us about the damage, materials, or work you need."
-                      placeholderTextColor={activeColors.placeholder}
-                      multiline
-                      numberOfLines={5}
-                      textAlignVertical="top"
                       style={[
-                        styles.textArea,
+                        styles.input,
                         {
-                          backgroundColor: activeColors.surface,
+                          backgroundColor: activeColors.background,
                           borderColor: activeColors.border,
                           color: activeColors.textPrimary,
                         },
                       ]}
+                      placeholder="Custom service details"
+                      placeholderTextColor={activeColors.placeholder}
+                      value={customService}
+                      onChangeText={setCustomService}
+                      onFocus={clearError}
                     />
-                  </View>
+                  )}
+                </View>
 
-                  <Pressable
+                <View style={styles.fieldGroup}>
+                  <Text
                     style={[
-                      styles.submitButton,
+                      styles.sectionLabel,
+                      { color: activeColors.textSecondary },
+                    ]}
+                  >
+                    CONTACT
+                  </Text>
+
+                  {/* FIXED: Wrapped inputs into layout boxes to prevent the Email box from spilling over container edges */}
+                  <View style={styles.inlineFields}>
+                    <View style={{ flex: 1 }}>
+                      <TextInput
+                        style={[
+                          styles.inputHalf,
+                          {
+                            backgroundColor: activeColors.background,
+                            borderColor: activeColors.border,
+                            color: activeColors.textPrimary,
+                          },
+                        ]}
+                        placeholder="Phone"
+                        placeholderTextColor={activeColors.placeholder}
+                        keyboardType="phone-pad"
+                        value={phone}
+                        onChangeText={setPhone}
+                        onFocus={clearError}
+                      />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <TextInput
+                        style={[
+                          styles.inputHalf,
+                          {
+                            backgroundColor: activeColors.background,
+                            borderColor: activeColors.border,
+                            color: activeColors.textPrimary,
+                          },
+                        ]}
+                        placeholder="Email"
+                        placeholderTextColor={activeColors.placeholder}
+                        keyboardType="email-address"
+                        autoCapitalize="none"
+                        value={email}
+                        onChangeText={setEmail}
+                        onFocus={clearError}
+                      />
+                    </View>
+                  </View>
+                </View>
+
+                <View style={styles.fieldGroup}>
+                  <Text
+                    style={[
+                      styles.sectionLabel,
+                      { color: activeColors.textSecondary },
+                    ]}
+                  >
+                    VEHICLE DETAILS
+                  </Text>
+                  <TextInput
+                    style={[
+                      styles.textArea,
                       {
-                        backgroundColor: isSubmitting
-                          ? "#4b5563"
-                          : activeColors.accent,
-                        opacity: isSubmitting ? 0.8 : 1,
+                        backgroundColor: activeColors.background,
+                        borderColor: activeColors.border,
+                        color: activeColors.textPrimary,
                       },
                     ]}
-                    onPress={handleSubmit}
-                    disabled={isSubmitting}
-                  >
+                    placeholder="Tell us about the damage, materials, or repairs needed..."
+                    placeholderTextColor={activeColors.placeholder}
+                    multiline
+                    numberOfLines={5}
+                    value={details}
+                    onChangeText={setDetails}
+                    onFocus={clearError}
+                  />
+                </View>
+
+                {errorMessage ? (
+                  <Text style={styles.errorText}>{errorMessage}</Text>
+                ) : null}
+
+                <Pressable
+                  style={[
+                    styles.submitButton,
+                    {
+                      backgroundColor: activeColors.accent,
+                      opacity: isSubmitting ? 0.8 : 1,
+                    },
+                  ]}
+                  onPress={handleSubmit}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <ActivityIndicator size="small" color="#fff" />
+                  ) : (
                     <Text
                       style={[
                         styles.submitButtonText,
@@ -672,90 +642,98 @@ export default function EstimateScreen(): React.JSX.Element {
                         },
                       ]}
                     >
-                      {isSubmitting ? "SUBMITTING..." : "SUBMIT ESTIMATE"}
+                      SUBMIT REQUEST
                     </Text>
-                  </Pressable>
-                </View>
-
-                <Modal
-                  visible={serviceMenuOpen}
-                  transparent
-                  animationType="fade"
-                  onRequestClose={() => setServiceMenuOpen(false)}
-                >
-                  <Pressable
-                    style={styles.modalOverlay}
-                    onPress={() => setServiceMenuOpen(false)}
-                  >
-                    <Pressable
-                      style={[
-                        styles.modalCard,
-                        {
-                          backgroundColor: activeColors.surface,
-                          borderColor: activeColors.border,
-                        },
-                      ]}
-                      onPress={() => {}}
-                    >
-                      <Text
-                        style={[
-                          styles.modalTitle,
-                          { color: activeColors.textPrimary },
-                        ]}
-                      >
-                        CHOOSE A SERVICE
-                      </Text>
-                      <FlatList
-                        data={serviceOptions}
-                        keyExtractor={(item) => item}
-                        keyboardShouldPersistTaps="handled"
-                        renderItem={({ item }) => (
-                          <Pressable
-                            style={[
-                              styles.serviceOption,
-                              {
-                                backgroundColor:
-                                  service === item
-                                    ? activeColors.accent
-                                    : activeColors.background,
-                                borderColor: activeColors.border,
-                              },
-                            ]}
-                            onPress={() => {
-                              setService(item);
-                              setServiceMenuOpen(false);
-                              if (item !== "OTHER") {
-                                setCustomService("");
-                              }
-                              clearError();
-                            }}
-                          >
-                            <Text
-                              style={[
-                                styles.serviceOptionText,
-                                {
-                                  color:
-                                    service === item
-                                      ? "#fff"
-                                      : activeColors.textPrimary,
-                                },
-                              ]}
-                            >
-                              {item}
-                            </Text>
-                          </Pressable>
-                        )}
-                        contentContainerStyle={styles.serviceListContent}
-                        showsVerticalScrollIndicator={false}
-                      />
-                    </Pressable>
-                  </Pressable>
-                </Modal>
+                  )}
+                </Pressable>
               </View>
             )}
-          </ScrollView>
-        </TouchableWithoutFeedback>
+          </Animated.View>
+        </ScrollView>
       </KeyboardAvoidingView>
+
+      <Modal
+        transparent
+        visible={serviceMenuOpen}
+        animationType="fade"
+        onRequestClose={() => setServiceMenuOpen(false)}
+      >
+        <Pressable
+          style={styles.modalBackdrop}
+          onPress={() => setServiceMenuOpen(false)}
+        >
+          <View
+            style={[
+              styles.modalCard,
+              {
+                backgroundColor: activeColors.surface,
+                borderColor: activeColors.border,
+              },
+            ]}
+          >
+            <Text
+              style={[styles.modalTitle, { color: activeColors.textPrimary }]}
+            >
+              SELECT SERVICE
+            </Text>
+            <FlatList
+              data={serviceOptions}
+              keyExtractor={(item) => item}
+              style={styles.optionList}
+              renderItem={({ item }) => (
+                <Pressable
+                  style={[
+                    styles.optionRow,
+                    {
+                      borderBottomColor: activeColors.border,
+                      backgroundColor:
+                        item === service
+                          ? "rgba(255,255,255,0.08)"
+                          : "transparent",
+                    },
+                  ]}
+                  onPress={() => {
+                    setService(item);
+                    setCustomService("");
+                    setServiceMenuOpen(false);
+                  }}
+                >
+                  <Text
+                    style={[
+                      styles.optionText,
+                      { color: activeColors.textPrimary },
+                    ]}
+                  >
+                    {item}
+                  </Text>
+                </Pressable>
+              )}
+            />
+            <Pressable
+              style={[
+                styles.modalCloseButton,
+                { backgroundColor: activeColors.accent },
+              ]}
+              onPress={() => setServiceMenuOpen(false)}
+            >
+              <Text
+                style={[
+                  styles.modalCloseText,
+                  {
+                    color:
+                      activeThemeKey === "PLATINUM_LIGHT" ||
+                      activeThemeKey === "WARM_VINTAGE"
+                        ? "#000"
+                        : "#fff",
+                  },
+                ]}
+              >
+                CLOSE
+              </Text>
+            </Pressable>
+          </View>
+        </Pressable>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -769,210 +747,265 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flexGrow: 1,
-    paddingBottom: 32,
+    padding: 18,
+    paddingBottom: 30,
   },
-  loadingOverlay: {
-    ...StyleSheet.absoluteFill,
-    backgroundColor: "rgba(0,0,0,0.7)",
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 10,
-  },
-  loadingLogo: {
-    width: 100,
-    height: 100,
-  },
-  loadingText: {
-    marginTop: 20,
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "700",
-    letterSpacing: 1,
-  },
-  successContainer: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 24,
-  },
-  successMessage: {
-    fontSize: 26,
-    fontWeight: "800",
-    textAlign: "center",
-    letterSpacing: 1,
-    lineHeight: 34,
-  },
-  successSubtext: {
-    fontSize: 16,
-    lineHeight: 24,
-    textAlign: "center",
-    marginTop: 18,
-  },
-  homeButton: {
-    marginTop: 28,
-    alignSelf: "center",
-    borderRadius: 12,
-    paddingVertical: 16,
-    paddingHorizontal: 28,
-    minWidth: 220,
-  },
-  homeButtonText: {
-    fontSize: 16,
-    fontWeight: "700",
-    textAlign: "center",
-    letterSpacing: 1,
+  formCard: {
+    borderWidth: 1,
+    borderRadius: 18,
+    padding: 18,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.2,
+    shadowRadius: 14,
+    elevation: 8,
+    ...Platform.select({
+      web: {
+        maxWidth: 800,
+        alignSelf: "center",
+        width: "100%", // Explicitly handles centering canvas bugs in web browsers
+      },
+    }),
   },
   formShell: {
-    paddingHorizontal: 16,
-    paddingTop: 16,
-    paddingBottom: 32,
+    gap: 18,
   },
   themeContainer: {
-    marginBottom: 18,
+    gap: 10,
   },
   themeLabelText: {
     fontSize: 12,
+    letterSpacing: 1.5,
     fontWeight: "700",
-    letterSpacing: 1.2,
-    marginBottom: 8,
-  },
-  themeRow: {
-    gap: 10,
-    paddingVertical: 4,
-  },
-  themeChip: {
-    borderRadius: 999,
-    borderWidth: 1,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    marginRight: 8,
-  },
-  themeChipText: {
-    fontSize: 11,
-    fontWeight: "700",
-    letterSpacing: 0.8,
     textTransform: "uppercase",
   },
-  title: {
-    fontSize: 28,
-    fontWeight: "800",
-    letterSpacing: 1.3,
-    marginTop: 10,
+  themeRow: {
+    paddingVertical: 4,
+    gap: 8,
   },
-  subtitle: {
-    fontSize: 15,
-    lineHeight: 22,
-    marginTop: 8,
-    marginBottom: 20,
-  },
-  errorText: {
-    marginBottom: 14,
-    padding: 12,
-    borderRadius: 10,
-    backgroundColor: "rgba(239,68,68,0.12)",
+  themeChip: {
     borderWidth: 1,
-    borderColor: "rgba(239,68,68,0.4)",
-    fontSize: 14,
-    fontWeight: "600",
+    borderRadius: 999,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
   },
-  formCard: {
-    gap: 16,
-  },
-  fieldGroup: {
-    gap: 8,
-  },
-  fieldRow: {
-    flexDirection: "row",
-    gap: 12,
-  },
-  inputHalf: {
-    flex: 1,
-    gap: 8,
-  },
-  label: {
-    fontSize: 11,
+  themeChipText: {
+    fontSize: 10,
     fontWeight: "700",
     letterSpacing: 1,
     textTransform: "uppercase",
   },
-  input: {
-    borderWidth: 1,
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    fontSize: 15,
-    minHeight: 48,
+  fieldGroup: {
+    gap: 10,
   },
-  selectBox: {
-    borderWidth: 1,
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    minHeight: 62,
-  },
-  selectValue: {
-    fontSize: 15,
-    fontWeight: "600",
-  },
-  textArea: {
-    borderWidth: 1,
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    minHeight: 120,
-    fontSize: 15,
-  },
-  submitButton: {
-    borderRadius: 12,
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    marginTop: 6,
-    marginBottom: 20,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  submitButtonText: {
-    fontSize: 16,
-    fontWeight: "800",
-    letterSpacing: 1.1,
+  sectionLabel: {
+    fontSize: 12,
+    letterSpacing: 1.3,
+    fontWeight: "700",
     textTransform: "uppercase",
   },
-  modalOverlay: {
+  /* FIXED: Merged duplicate declarations and preserved padding, minHeight, and boundaries */
+  input: {
+    minHeight: 48,
+    borderWidth: 1,
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    fontSize: 15,
+    padding: 10,
+    ...Platform.select({
+      web: {
+        outlineWidth: 0,
+        cursor: "text",
+        userSelect: "text", // Explicitly forces desktop pointer availability
+      },
+    }),
+  },
+  /* FIXED: Added web overrides so clicking Year, Make, and Model elements functions */
+  inputHalf: {
+    flex: 1,
+    minHeight: 48,
+    borderWidth: 1,
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    fontSize: 15,
+    ...Platform.select({
+      web: {
+        outlineWidth: 0,
+        cursor: "text",
+        userSelect: "text",
+      },
+    }),
+  },
+  inlineFields: {
+    flexDirection: "row",
+    gap: 10,
+  },
+  /* FIXED: Added web overrides to details multi-line field */
+  textArea: {
+    minHeight: 130,
+    borderWidth: 1,
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    textAlignVertical: "top",
+    fontSize: 15,
+    ...Platform.select({
+      web: {
+        outlineWidth: 0,
+        cursor: "text",
+        userSelect: "text",
+      },
+    }),
+  },
+  dropdownButton: {
+    minHeight: 48,
+    borderWidth: 1,
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    ...Platform.select({
+      web: {
+        cursor: "pointer", // Gives web users a visual hand selection indicator
+      },
+    }),
+  },
+  errorText: {
+    color: "#ff5c5c",
+    fontSize: 13,
+    fontWeight: "600",
+    textAlign: "center",
+  },
+  submitButton: {
+    minHeight: 52,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 8,
+    marginBottom: 40,
+    ...Platform.select({
+      web: {
+        cursor: "pointer",
+      },
+    }),
+  },
+  submitButtonText: {
+    fontSize: 15,
+    fontWeight: "800",
+    letterSpacing: 1.2,
+    textTransform: "uppercase",
+  },
+  successContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 14,
+    gap: 18,
+  },
+  successMessage: {
+    textAlign: "center",
+    fontSize: 24,
+    fontWeight: "800",
+    letterSpacing: 1,
+    lineHeight: 32,
+    textTransform: "uppercase",
+  },
+  successSubtext: {
+    textAlign: "center",
+    fontSize: 18,
+    lineHeight: 24,
+  },
+  homeButton: {
+    marginTop: 10,
+    paddingVertical: 14,
+    paddingHorizontal: 28,
+    borderRadius: 12,
+    ...Platform.select({
+      web: {
+        cursor: "pointer",
+      },
+    }),
+  },
+  homeButtonText: {
+    fontSize: 14,
+    fontWeight: "800",
+    letterSpacing: 1.2,
+    textTransform: "uppercase",
+  },
+  modalBackdrop: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.6)",
-    padding: 24,
+    backgroundColor: "rgba(0,0,0,0.4)",
+    padding: 18,
   },
   modalCard: {
     width: "100%",
-    maxWidth: 500,
-    borderRadius: 18,
+    maxWidth: 480,
     borderWidth: 1,
+    borderRadius: 16,
     padding: 18,
     maxHeight: "70%",
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "800",
-    letterSpacing: 1,
-    marginBottom: 16,
-    textAlign: "center",
+    letterSpacing: 1.2,
+    marginBottom: 12,
+    textTransform: "uppercase",
   },
-  serviceListContent: {
-    gap: 8,
-    paddingBottom: 8,
+  optionList: {
+    maxHeight: 350,
   },
-  serviceOption: {
-    borderWidth: 1,
+  optionRow: {
+    paddingVertical: 14,
+    paddingHorizontal: 10,
+    borderBottomWidth: 1,
+    ...Platform.select({
+      web: {
+        cursor: "pointer",
+      },
+    }),
+  },
+  optionText: {
+    fontSize: 15,
+    fontWeight: "600",
+  },
+  modalCloseButton: {
+    marginTop: 14,
+    minHeight: 46,
     borderRadius: 10,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    marginBottom: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    ...Platform.select({
+      web: {
+        cursor: "pointer",
+      },
+    }),
   },
-  serviceOptionText: {
+  modalCloseText: {
+    fontSize: 14,
+    fontWeight: "800",
+    letterSpacing: 1.1,
+    textTransform: "uppercase",
+  },
+  loadingOverlay: {
+    ...StyleSheet.absoluteFill, // Safe full boundary tracking across platforms
+    backgroundColor: "rgba(0,0,0,0.72)",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 999,
+  },
+  loadingLogo: {
+    width: 118,
+    height: 118,
+  },
+  loadingText: {
+    marginTop: 18,
+    color: "#fff",
     fontSize: 14,
     fontWeight: "700",
-    letterSpacing: 0.4,
+    letterSpacing: 1.5,
     textTransform: "uppercase",
   },
 });
