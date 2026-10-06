@@ -1,12 +1,12 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  Pressable,
-  Platform,
-} from "react-native";
 import { router, Stack } from "expo-router";
+import {
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 type ServicePackageProps = {
   name: string;
@@ -308,12 +308,194 @@ export default function ServicesScreen() {
         <ServicePackage
           name="BASIC"
           price="$200+"
-          description="Basic convertible top inspection and minor adjustments."
+          description="Basic convertible top service."
           onPress={() =>
             router.push({
               pathname: "/estimate",
               params: {
                 service: "CONVERTIBLE TOP SERVICES — BASIC",
+              },
+            })
+          }
+        />
+
+        <ServicePackage
+          name="STANDARD"
+          price="$750+"
+          description="Full convertible top service, custom finishes."
+          onPress={() =>
+            router.push({
+              pathname: "/estimate",
+              params: {
+                service: "CONVERTIBLE TOP SERVICES — STANDARD",
+              },
+            })
+          }
+        />
+
+        <ServicePackage
+          name="PREMIUM"
+          price="$1,500+"
+          description="Complete custom convertible top service & premium materials."
+          onPress={() =>
+            router.push({
+              pathname: "/estimate",
+              params: {
+                service: "CONVERTIBLE TOP SERVICES — PREMIUM",
+              },
+            })
+          }
+        />
+
+        <Text style={styles.serviceTitle}>CUSTOM UPGRADES</Text>
+
+        <Text style={styles.serviceText}>
+          Personalize your interior with premium custom upgrades and finishes.
+        </Text>
+
+        <ServicePackage
+          name="DIAMOND STITCHING"
+          price="$500+"
+          description="Custom diamond stitching for a luxurious look."
+          onPress={() =>
+            router.push({
+              pathname: "/estimate",
+              params: {
+                service: "CUSTOM UPGRADES — DIAMOND STITCHING",
+              },
+            })
+          }
+        />
+
+        <ServicePackage
+          name="TWO-TONE UPHOLSTERY"
+          price="$750+"
+          description="Custom two-tone upholstery for a unique look."
+          onPress={() =>
+            router.push({
+              pathname: "/estimate",
+              params: {
+                service: "CUSTOM UPGRADES — TWO-TONE UPHOLSTERY",
+              },
+            })
+          }
+        />
+
+        <ServicePackage
+          name="PREMIUM LEATHER"
+          price="$1,000+"
+          description="Premium leather seating for a luxurious feel."
+          onPress={() =>
+            router.push({
+              pathname: "/estimate",
+              params: {
+                service: "CUSTOM UPGRADES — PREMIUM LEATHER",
+              },
+            })
+          }
+        />
+
+        <ServicePackage
+          name="CUSTOM EMBROIDERY"
+          price="$75+"
+          description="Custom embroidery for a personalized touch."
+          onPress={() =>
+            router.push({
+              pathname: "/estimate",
+              params: {
+                service: "CUSTOM UPGRADES — CUSTOM EMBROIDERY",
+              },
+            })
+          }
+        />
+
+        <ServicePackage
+          name="CUSTOM TRUNK UPHOLSTERY"
+          price="$750+"
+          description="Custom trunk upholstery for a cohesive look."
+          onPress={() =>
+            router.push({
+              pathname: "/estimate",
+              params: {
+                service: "CUSTOM UPGRADES — CUSTOM TRUNK UPHOLSTERY",
+              },
+            })
+          }
+        />
+
+        <ServicePackage
+          name="SOUND DEADENING"
+          price="$500+"
+          description="Complete sound deadening for a quieter ride."
+          onPress={() =>
+            router.push({
+              pathname: "/estimate",
+              params: {
+                service: "CUSTOM UPGRADES — SOUND DEADENING",
+              },
+            })
+          }
+        />
+
+        <ServicePackage
+          name="CUSTOM TRUNK UPHOLSTERY"
+          price="$750+"
+          description="Custom trunk upholstery for a cohesive look."
+          onPress={() =>
+            router.push({
+              pathname: "/estimate",
+              params: {
+                service: "CUSTOM UPGRADES — CUSTOM TRUNK UPHOLSTERY",
+              },
+            })
+          }
+        />
+
+        <ServicePackage
+          name="SOUND DEADENING"
+          price="$500+"
+          description="Complete sound deadening for a quieter ride."
+          onPress={() =>
+            router.push({
+              pathname: "/estimate",
+              params: {
+                service: "CUSTOM UPGRADES — SOUND DEADENING",
+              },
+            })
+          }
+        />
+
+        <Text style={styles.serviceTitle}>CLASSIC & CUSTOM RESTORATION</Text>
+
+        <Text style={styles.serviceText}>
+          Full interior restoration for classic vehicles, custom builds and
+          premium projects.
+        </Text>
+
+        <ServicePackage
+          name="STANDARD RESTORATION"
+          price="$3,000+"
+          description="Complete interior restoration for classic vehicles."
+          onPress={() =>
+            router.push({
+              pathname: "/estimate",
+              params: {
+                service: "CLASSIC & CUSTOM RESTORATION — STANDARD RESTORATION",
+              },
+            })
+          }
+        />
+
+        <ServicePackage
+          name="PREMIUM COMPLETE INTERIOR"
+          price="$10,000+"
+          description="Complete premium interior restoration for a luxurious feel."
+          onPress={() =>
+            router.push({
+              pathname: "/estimate",
+              params: {
+                service:
+                  "CLASSIC & CUSTOM RESTORATION — PREMIUM COMPLETE INTERIOR",
               },
             })
           }
