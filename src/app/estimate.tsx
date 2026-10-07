@@ -262,7 +262,7 @@ export default function EstimateScreen(): React.JSX.Element {
         <View style={styles.loadingOverlay}>
           <Animated.View style={{ opacity: logoOpacity }}>
             <Image
-              source={require("../../assets/images/seat-logo.png")}
+              source={require("../../src/app/images/seat-logo.png")}
               style={styles.loadingLogo}
               resizeMode="contain"
             />
