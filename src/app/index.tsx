@@ -1,21 +1,22 @@
+import { router } from "expo-router";
 import React from "react";
 import {
-  View,
-  Text,
-  Pressable,
-  StyleSheet,
   Image,
-  TouchableOpacity,
-  ScrollView,
   Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { router } from "expo-router";
 
 export default function HomeScreen(): React.JSX.Element {
   const handlePress = (): void => {
     router.push("/website");
   };
+  <link rel="icon" type="image/png" href="@/src/app/images/icon.png" />;
 
   return (
     <SafeAreaView style={styles.safeAreaContainer}>
@@ -28,7 +29,7 @@ export default function HomeScreen(): React.JSX.Element {
         >
           <TouchableOpacity onPress={handlePress} activeOpacity={0.7}>
             <Image
-              source={require("../../assets/images/gutz-n-shell-logo.png")}
+              source={require("../../src/app/images/gutz-n-shell-logo.png")}
               style={styles.logo}
             />
           </TouchableOpacity>
@@ -45,7 +46,7 @@ export default function HomeScreen(): React.JSX.Element {
 
           <Pressable onPress={() => router.push("/seat-repair")}>
             <Image
-              source={require("../../assets/images/seat-repair.png")}
+              source={require("../../src/app/images/seat-repair.png")}
               style={styles.repairButtonImage}
               resizeMode="contain"
             />
@@ -53,7 +54,7 @@ export default function HomeScreen(): React.JSX.Element {
 
           <Pressable onPress={() => router.push("/estimate")}>
             <Image
-              source={require("../../assets/images/request-estimate.png")}
+              source={require("../../src/app/images/request-estimate.png")}
               style={styles.estimateButtonImage}
               resizeMode="contain"
             />
@@ -61,7 +62,7 @@ export default function HomeScreen(): React.JSX.Element {
 
           <Pressable onPress={() => router.push("/services")}>
             <Image
-              source={require("../../assets/images/our-services.png")}
+              source={require("../../src/app/images/our-services.png")}
               style={styles.servicesButtonImage}
               resizeMode="contain"
             />

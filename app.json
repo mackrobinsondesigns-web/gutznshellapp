@@ -4,32 +4,32 @@
     "slug": "GutzNShellApp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./src/app/images/icon.png",
     "scheme": "gutznshellapp",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/images/icon.png"
+      "icon": "./src/app/images/icon.png"
     },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "foregroundImage": "./src/app/images/android-icon-foreground.png",
+        "backgroundImage": "./src/app/images/android-icon-background.png",
+        "monochromeImage": "./src/app/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/icon.png",
+      "favicon": "./src/app/images/icon.png",
       "pwa": {
         "enabled": true,
         "display": "standalone",
         "orientation": "portrait",
         "backgroundColor": "#000000",
         "themeColor": "#000000",
-        "icon": "./assets/images/icon.png"
+        "icon": "./src/app/images/icon.png"
       }
     },
     "plugins": [
@@ -40,15 +40,15 @@
         }
       ],
       [
-        "icon-splash-screen",
+        "expo-splash-screen",
         {
-          "backgroundColor": "transparent",
-          "image": "./assets/images/icon.png",
+          "backgroundColor": "#E6F4FE",
+          "image": "./src/app/images/splash.png",
           "imageWidth": 76
         }
       ],
-      "icon-image",
-      "icon-web-browser"
+      "expo-image",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,

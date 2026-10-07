@@ -160,12 +160,12 @@ export default function EstimateScreen(): React.JSX.Element {
         Animated.sequence([
           Animated.timing(logoOpacity, {
             toValue: 1,
-            duration: 4000,
+            duration: 5000,
             useNativeDriver: true,
           }),
           Animated.timing(logoOpacity, {
             toValue: 0.3,
-            duration: 4000,
+            duration: 5000,
             useNativeDriver: true,
           }),
         ]),
@@ -262,7 +262,7 @@ export default function EstimateScreen(): React.JSX.Element {
         <View style={styles.loadingOverlay}>
           <Animated.View style={{ opacity: logoOpacity }}>
             <Image
-              source={require("../../assets/images/seat-logo.png")}
+              source={require("../../src/app/images/seat-logo.png")}
               style={styles.loadingLogo}
               resizeMode="contain"
             />

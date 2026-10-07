@@ -88,7 +88,7 @@ export default function SeatRepairScreen() {
 
               <TouchableOpacity onPress={handlePress} activeOpacity={0.7}>
                 <Image
-                  source={require("../../assets/images/gutz-n-shell-logo.png")}
+                  source={require("../../src/app/images/gutz-n-shell-logo.png")}
                   style={styles.logo}
                 />
               </TouchableOpacity>

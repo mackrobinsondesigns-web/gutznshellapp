@@ -1,8 +1,8 @@
+import { Stack } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, View, ActivityIndicator, Platform } from "react-native";
+import { ActivityIndicator, Platform, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { WebView } from "react-native-webview";
-import { Stack } from "expo-router";
 
 export default function WebsiteScreen(): React.JSX.Element {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
