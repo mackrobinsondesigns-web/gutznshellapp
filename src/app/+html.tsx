@@ -13,7 +13,11 @@ export default function Root({ children }: PropsWithChildren) {
         />
         <ScrollViewStyleReset />
 
+<<<<<<< HEAD
         {/* Advanced multi-size favicon tags */}
+=======
+        {/*Paste your advanced multi-size favicon tags here */}
+>>>>>>> f3fc1c0d4dc11a14125bf8aaed0d23266eab24c4
         <link
           rel="apple-touch-icon"
           sizes="180x180"
@@ -32,6 +36,7 @@ export default function Root({ children }: PropsWithChildren) {
           href="/favicon-16x16.png"
         />
         <link rel="manifest" href="/site.webmanifest" />
+<<<<<<< HEAD
 
         {/* 🚀 Service Worker Registration Script */}
         <script
@@ -47,6 +52,8 @@ export default function Root({ children }: PropsWithChildren) {
             `,
           }}
         />
+=======
+>>>>>>> f3fc1c0d4dc11a14125bf8aaed0d23266eab24c4
       </head>
       <body>{children}</body>
     </html>
