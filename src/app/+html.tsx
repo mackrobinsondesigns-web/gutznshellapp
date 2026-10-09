@@ -13,11 +13,30 @@ export default function Root({ children }: PropsWithChildren) {
         />
         <ScrollViewStyleReset />
 
-<<<<<<< HEAD
+        {/* Global CSS fix to prevent canvas collapse (Cleaned of conflicting styles) */}
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+          html, body, #root, #__next {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+          }
+        `,
+          }}
+        />
+
+        {/* iOS mobile web app capability tags */}
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="GutzNShell" />
+
+        {/* Mobile Browser Address Bar and Splash Sync Color */}
+        <meta name="theme-color" content="#6f90ba" />
+
         {/* Advanced multi-size favicon tags */}
-=======
-        {/*Paste your advanced multi-size favicon tags here */}
->>>>>>> f3fc1c0d4dc11a14125bf8aaed0d23266eab24c4
         <link
           rel="apple-touch-icon"
           sizes="180x180"
@@ -35,26 +54,26 @@ export default function Root({ children }: PropsWithChildren) {
           sizes="16x16"
           href="/favicon-16x16.png"
         />
-        <link rel="manifest" href="/site.webmanifest" />
-<<<<<<< HEAD
 
-        {/* 🚀 Service Worker Registration Script */}
+        {/* Linked directly to Expo's auto-generated PWA manifest */}
+        <link rel="manifest" href="/manifest.json" />
+
+        {/* Service Worker Registration Script */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
               if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
                   navigator.serviceWorker.register('/sw.js')
-                    .then(reg => console.log('Service Worker registered successfully!', reg.scope))
-                    .catch(err => console.error('Service Worker registration failed:', err));
+                    .then((reg) => console.log('Service Worker registered successfully!', reg.scope))
+                    .catch((err) => console.error('Service Worker registration failed:', err));
                 });
               }
             `,
           }}
         />
-=======
->>>>>>> f3fc1c0d4dc11a14125bf8aaed0d23266eab24c4
       </head>
+      {/* Cleaned: Removed conflicting inline styles from the body element */}
       <body>{children}</body>
     </html>
   );

@@ -27,8 +27,8 @@
         "enabled": true,
         "display": "standalone",
         "orientation": "portrait",
-        "backgroundColor": "#000000",
-        "themeColor": "#000000",
+        "backgroundColor": "#6f90ba",
+        "themeColor": "#6f90ba",
         "icon": "./src/app/images/icon.png"
       }
     },

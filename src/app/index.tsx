@@ -17,6 +17,8 @@ export default function HomeScreen(): React.JSX.Element {
     router.push("/website");
   };
   <link rel="icon" type="image/png" href="@/src/app/images/icon.png" />;
+  <link rel="manifest" href="/manifest.json" />;
+  <link rel="theme-color" href="#000000" />;
 
   return (
     <SafeAreaView style={styles.safeAreaContainer}>

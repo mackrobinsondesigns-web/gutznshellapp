@@ -48,3 +48,12 @@ self.addEventListener("fetch", (event) => {
     }),
   );
 });
+
+self.addEventListener("fetch", (event) => {
+  // A minimal fetch handler is required for PWA installability
+  event.respondWith(
+    fetch(event.request).catch(() => {
+      return new Response("You are offline.");
+    }),
+  );
+});

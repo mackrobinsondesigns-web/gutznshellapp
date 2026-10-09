@@ -1,30 +1,39 @@
-import React from "react";
-import { Stack, ThemeProvider, DarkTheme } from "expo-router";
-// 1. IMPORT THE NATIVE SYSTEM ENGINE TOOL
+import { DarkTheme, Stack, ThemeProvider } from "expo-router";
 import * as SystemUI from "expo-system-ui";
+import React, { useEffect } from "react";
+import { Platform } from "react-native";
 
-// 2. RUN THIS IMMEDIATELY OUTSIDE THE COMPONENT (Forces Android/iOS window frame to black)
-SystemUI.setBackgroundColorAsync("#000000");
+// Define your master color variable here so everything syncs perfectly
+const THEME_COLOR = "#6f90ba";
 
-const CustomBlackTheme = {
+const CustomTheme = {
   ...DarkTheme,
   colors: {
     ...DarkTheme.colors,
-    background: "#000000",
-    card: "#000000",
+    background: THEME_COLOR,
+    card: THEME_COLOR,
   },
 };
 
 export default function RootLayout(): React.JSX.Element {
+  // Use an effect block so native system hooks only run safely on phones
+  useEffect(() => {
+    if (Platform.OS !== "web") {
+      SystemUI.setBackgroundColorAsync(THEME_COLOR).catch((err) =>
+        console.log("SystemUI not supported on this platform context", err),
+      );
+    }
+  }, []);
+
   return (
-    <ThemeProvider value={CustomBlackTheme}>
+    <ThemeProvider value={CustomTheme}>
       <Stack
         screenOptions={{
           animation: "slide_from_right",
           animationDuration: 250,
-          contentStyle: { backgroundColor: "#000000" },
+          contentStyle: { backgroundColor: THEME_COLOR },
           headerStyle: {
-            backgroundColor: "#000000",
+            backgroundColor: THEME_COLOR,
           },
           headerTintColor: "#b4b9be",
           headerTitleStyle: {
@@ -62,7 +71,7 @@ export default function RootLayout(): React.JSX.Element {
           name="website"
           options={{
             headerShown: false,
-            contentStyle: { backgroundColor: "#000000" },
+            contentStyle: { backgroundColor: THEME_COLOR },
           }}
         />
       </Stack>
