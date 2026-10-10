@@ -13,7 +13,7 @@ export default function Root({ children }: PropsWithChildren) {
         />
         <ScrollViewStyleReset />
 
-        {/* Global CSS fix to prevent canvas collapse (Cleaned of conflicting styles) */}
+        {/* Global CSS fix to prevent canvas collapse */}
         <style
           dangerouslySetInnerHTML={{
             __html: `
@@ -34,7 +34,7 @@ export default function Root({ children }: PropsWithChildren) {
         <meta name="apple-mobile-web-app-title" content="GutzNShell" />
 
         {/* Mobile Browser Address Bar and Splash Sync Color */}
-        <meta name="theme-color" content="#6f90ba" />
+        <meta name="theme-color" content="#000000" />
 
         {/* Advanced multi-size favicon tags */}
         <link
@@ -55,8 +55,8 @@ export default function Root({ children }: PropsWithChildren) {
           href="/favicon-16x16.png"
         />
 
-        {/* Linked directly to Expo's auto-generated PWA manifest */}
-        <link rel="manifest" href="/manifest.json" />
+        {/* Force linking directly to your custom manifest layout */}
+        <link rel="manifest" href="/site.webmanifest" />
 
         {/* Service Worker Registration Script */}
         <script
@@ -73,7 +73,6 @@ export default function Root({ children }: PropsWithChildren) {
           }}
         />
       </head>
-      {/* Cleaned: Removed conflicting inline styles from the body element */}
       <body>{children}</body>
     </html>
   );

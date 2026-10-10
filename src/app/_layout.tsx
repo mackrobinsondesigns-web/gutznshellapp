@@ -1,10 +1,8 @@
 import { DarkTheme, Stack, ThemeProvider } from "expo-router";
-import * as SystemUI from "expo-system-ui";
-import React, { useEffect } from "react";
-import { Platform } from "react-native";
+import React from "react";
 
-// Define your master color variable here so everything syncs perfectly
-const THEME_COLOR = "#6f90ba";
+// Define your uniform color theme
+const THEME_COLOR = "#000000";
 
 const CustomTheme = {
   ...DarkTheme,
@@ -16,15 +14,6 @@ const CustomTheme = {
 };
 
 export default function RootLayout(): React.JSX.Element {
-  // Use an effect block so native system hooks only run safely on phones
-  useEffect(() => {
-    if (Platform.OS !== "web") {
-      SystemUI.setBackgroundColorAsync(THEME_COLOR).catch((err) =>
-        console.log("SystemUI not supported on this platform context", err),
-      );
-    }
-  }, []);
-
   return (
     <ThemeProvider value={CustomTheme}>
       <Stack
@@ -48,6 +37,7 @@ export default function RootLayout(): React.JSX.Element {
           options={{
             title: "Seat Repair",
             animation: "slide_from_bottom",
+            contentStyle: { backgroundColor: "#000000" },
           }}
         />
 

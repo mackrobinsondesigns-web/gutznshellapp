@@ -12,7 +12,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#000000",
         "foregroundImage": "./src/app/images/android-icon-foreground.png",
         "backgroundImage": "./src/app/images/android-icon-background.png",
         "monochromeImage": "./src/app/images/android-icon-monochrome.png"
@@ -24,11 +24,11 @@
       "output": "static",
       "favicon": "./src/app/images/icon.png",
       "pwa": {
-        "enabled": true,
+        "enabled": false,
         "display": "standalone",
         "orientation": "portrait",
-        "backgroundColor": "#6f90ba",
-        "themeColor": "#6f90ba",
+        "backgroundColor": "#000000",
+        "themeColor": "#000000",
         "icon": "./src/app/images/icon.png"
       }
     },
@@ -42,7 +42,7 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#E6F4FE",
+          "backgroundColor": "#000000",
           "image": "./src/app/images/splash.png",
           "imageWidth": 76
         }
