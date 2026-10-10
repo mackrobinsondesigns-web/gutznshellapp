@@ -23,6 +23,7 @@
       "bundler": "metro",
       "output": "static",
       "favicon": "./src/app/images/icon.png",
+      "publicPath": "./public",
       "pwa": {
         "enabled": false,
         "display": "standalone",

@@ -13,9 +13,29 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function SeatRepairScreen() {
-  const handlePress = () => {
-    router.push("/website");
+export default function SeatRepairScreen(): React.JSX.Element {
+  const handlePress = (): void => {
+    if (Platform.OS === "web") {
+      // 1. Open the clean blank browser tab frame natively
+      const newTab = window.open("about:blank", "_blank");
+
+      if (newTab) {
+        // 2. IMMEDIATELY inject a dark backdrop style into the empty document to prevent the white flash
+        newTab.document.write(`
+          <html style="background-color: #000000; height: 100%; width: 100%;">
+            <head><title>Loading Gutz N Shell...</title></head>
+            <body style="margin: 0; background-color: #000000; display: flex; justify-content: center; align-items: center;">
+            </body>
+          </html>
+        `);
+        newTab.document.close();
+
+        // 3. Seamlessly redirect the dark frame to load your live website content
+        newTab.location.href = "https://gutznshell.com";
+      }
+    } else {
+      router.push("/website");
+    }
   };
 
   return (

@@ -14,12 +14,31 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen(): React.JSX.Element {
   const handlePress = (): void => {
-    router.push("/website");
+    if (Platform.OS === "web") {
+      // 1. Open the clean blank browser tab frame natively
+      const newTab = window.open("about:blank", "_blank");
+
+      if (newTab) {
+        // 2. IMMEDIATELY inject a dark backdrop style into the empty document to prevent the white flash
+        newTab.document.write(`
+          <html style="background-color: #000000; height: 100%; width: 100%;">
+            <head><title>Loading Gutz N Shell...</title></head>
+            <body style="margin: 0; background-color: #000000; display: flex; justify-content: center; align-items: center;">
+            </body>
+          </html>
+        `);
+        newTab.document.close();
+
+        // 3. Seamlessly redirect the dark frame to load your live website content
+        newTab.location.href = "https://gutznshell.com";
+      }
+    } else {
+      router.push("/website");
+    }
   };
 
   return (
     <SafeAreaView style={styles.safeAreaContainer}>
-      {/* Structural desktop wrapper to keep layout centered, crisp, and beautifully aligned on wider displays */}
       <View style={styles.appShell}>
         <ScrollView
           contentContainerStyle={styles.scrollContainer}
@@ -67,7 +86,6 @@ export default function HomeScreen(): React.JSX.Element {
             />
           </Pressable>
 
-          {/* Premium Digital Business Card Portal Shortcut */}
           <Pressable
             onPress={() => router.push("/card")}
             style={({ pressed }) => [
@@ -88,7 +106,7 @@ export default function HomeScreen(): React.JSX.Element {
 const styles = StyleSheet.create({
   safeAreaContainer: {
     flex: 1,
-    backgroundColor: "#000000", // FIXED: Changed from #000000db to true solid pitch black to prevent browser viewport bleed-through
+    backgroundColor: "#000000",
     width: "100%",
     ...Platform.select({
       web: {
@@ -101,9 +119,9 @@ const styles = StyleSheet.create({
     width: "100%",
     ...Platform.select({
       web: {
-        maxWidth: 550, // Restricts screen stretch on computer monitors
-        alignSelf: "center", // Centers the entire mobile application viewport on desktop browsers
-        boxShadow: "0 0 40px rgba(0,0,0,0.8)", // Adds a subtle deep premium fade outline on desktop views
+        maxWidth: 550,
+        alignSelf: "center",
+        boxShadow: "0 0 40px rgba(0,0,0,0.8)",
       },
     }),
   },
@@ -163,7 +181,6 @@ const styles = StyleSheet.create({
     height: 60,
     marginTop: 20,
   },
-  /* Added Premium Card Button Rules mapped seamlessly to your graphic buttons size */
   cardPortalBtn: {
     width: 320,
     height: 54,
@@ -188,7 +205,7 @@ const styles = StyleSheet.create({
     transform: [{ scale: 0.98 }],
   },
   cardPortalBtnText: {
-    color: "#ebdcd0", // Soft warm copper tint matching your leather stitch elements
+    color: "#ebdcd0",
     fontSize: 13,
     fontWeight: "700",
     letterSpacing: 1.2,
