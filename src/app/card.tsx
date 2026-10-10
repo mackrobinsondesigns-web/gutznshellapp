@@ -34,6 +34,7 @@ export default function PristineLeatherCardHub() {
     <View style={styles.screenContainer}>
       {/* Dynamic Image Wrapper loading your custom text art card design natively */}
       <ImageBackground
+        // FIXED: Universal relative mapping path that lets Expo find and extract the card asset cleanly on compile
         source={require("./images/card-bg.png")}
         style={styles.cardLayoutFrame}
         resizeMode="contain"
@@ -63,6 +64,7 @@ const styles = StyleSheet.create({
     width: width > 450 ? 420 : "100%",
     aspectRatio: 0.457, // Matches the exact tall dimensions of your Gutz N Shell stitched leather canvas
     position: "relative",
+    height: "100%", // FIXED: Provides explicit height parameters to prevent web browser container collapse
   },
   phoneLinkOverlayBox: {
     position: "absolute",
