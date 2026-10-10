@@ -18,7 +18,7 @@ export default function RootLayout(): React.JSX.Element {
     <ThemeProvider value={CustomTheme}>
       <Stack
         screenOptions={{
-          animation: "slide_from_right",
+          animation: "slide_from_bottom",
           animationDuration: 250,
           contentStyle: { backgroundColor: THEME_COLOR },
           headerStyle: {
