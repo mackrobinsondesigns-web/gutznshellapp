@@ -33,6 +33,14 @@ export default function RootLayout(): React.JSX.Element {
         <Stack.Screen name="index" options={{ title: "GUTZ N SHELL" }} />
 
         <Stack.Screen
+          name="card"
+          options={{
+            title: "BUSINESS CARD",
+            animation: "slide_from_bottom",
+          }}
+        />
+
+        <Stack.Screen
           name="seat-repair"
           options={{
             title: "Seat Repair",

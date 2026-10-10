@@ -16,9 +16,6 @@ export default function HomeScreen(): React.JSX.Element {
   const handlePress = (): void => {
     router.push("/website");
   };
-  <link rel="icon" type="image/png" href="@/src/app/images/icon.png" />;
-  <link rel="manifest" href="/manifest.json" />;
-  <link rel="theme-color" href="#000000" />;
 
   return (
     <SafeAreaView style={styles.safeAreaContainer}>
@@ -68,6 +65,19 @@ export default function HomeScreen(): React.JSX.Element {
               style={styles.servicesButtonImage}
               resizeMode="contain"
             />
+          </Pressable>
+
+          {/* Premium Digital Business Card Portal Shortcut */}
+          <Pressable
+            onPress={() => router.push("/card")}
+            style={({ pressed }) => [
+              styles.cardPortalBtn,
+              pressed && styles.cardPortalBtnPressed,
+            ]}
+          >
+            <Text style={styles.cardPortalBtnText}>
+              VIEW DIGITAL BUSINESS CARD
+            </Text>
           </Pressable>
         </ScrollView>
       </View>
@@ -152,5 +162,35 @@ const styles = StyleSheet.create({
     width: 320,
     height: 60,
     marginTop: 20,
+  },
+  /* Added Premium Card Button Rules mapped seamlessly to your graphic buttons size */
+  cardPortalBtn: {
+    width: 320,
+    height: 54,
+    backgroundColor: "rgba(235, 220, 208, 0.06)",
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: "rgba(235, 220, 208, 0.35)",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 24,
+    marginBottom: 10,
+    ...Platform.select({
+      web: {
+        transition: "all 0.2s ease-in-out",
+        cursor: "pointer",
+      },
+    }),
+  },
+  cardPortalBtnPressed: {
+    backgroundColor: "rgba(235, 220, 208, 0.15)",
+    borderColor: "rgba(235, 220, 208, 0.6)",
+    transform: [{ scale: 0.98 }],
+  },
+  cardPortalBtnText: {
+    color: "#ebdcd0", // Soft warm copper tint matching your leather stitch elements
+    fontSize: 13,
+    fontWeight: "700",
+    letterSpacing: 1.2,
   },
 });
