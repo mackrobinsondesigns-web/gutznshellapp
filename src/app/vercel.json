@@ -5,6 +5,29 @@
   "cleanUrls": true,
   "framework": null,
   "rewrites": [
-    { "source": "/:path*", "destination": "/" }
+    {
+      "source": "/_next/:path*",
+      "destination": "/_next/:path*"
+    },
+    {
+      "source": "/(icons|images|assets)/:path*",
+      "destination": "/$1/:path*"
+    },
+    {
+      "source": "/manifest.json",
+      "destination": "/manifest.json"
+    },
+    {
+      "source": "/sw.js",
+      "destination": "/sw.js"
+    },
+    {
+      "source": "/contact.vcf",
+      "destination": "/contact.vcf"
+    },
+    {
+      "source": "/:path*",
+      "destination": "/index.html"
+    }
   ]
 }
