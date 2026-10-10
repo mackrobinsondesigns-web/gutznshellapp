@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   Dimensions,
   ImageBackground,
@@ -12,17 +12,14 @@ import {
 const { width } = Dimensions.get("window");
 
 export default function PristineLeatherCardHub() {
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
-
   useEffect(() => {
+    // 1. AUTOMATIC VCARD DATA SYNC: Triggers contact profile download 1.5 seconds after load
     if (Platform.OS === "web") {
-      const handlePrompt = (e: Event) => {
-        e.preventDefault();
-        setDeferredPrompt(e);
-      };
-      window.addEventListener("beforeinstallprompt", handlePrompt);
-      return () =>
-        window.removeEventListener("beforeinstallprompt", handlePrompt);
+      const triggerVCardDownload = setTimeout(() => {
+        Linking.openURL("https://gutznshell.com");
+      }, 1500);
+
+      return () => clearTimeout(triggerVCardDownload);
     }
   }, []);
 
@@ -32,21 +29,43 @@ export default function PristineLeatherCardHub() {
 
   return (
     <View style={styles.screenContainer}>
-      {/* Dynamic Image Wrapper loading your custom text art card design natively */}
+      {/* 2. DIRECT HTML ANIMATION OVERRIDE: Bypasses compiler limitations completely */}
+      {Platform.OS === "web" && (
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+            @keyframes leatherGlowLoop {
+              0% { opacity: 0.15; transform: scale(0.99); }
+              50% { opacity: 0.80; transform: scale(1.01); }
+              100% { opacity: 0.15; transform: scale(0.99); }
+            }
+            [data-media="web-pulse-active"] {
+              animation: leatherGlowLoop 2.5s infinite ease-in-out !important;
+            }
+          `,
+          }}
+        />
+      )}
+
       <ImageBackground
-        // FIXED: Universal relative mapping path that lets Expo find and extract the card asset cleanly on compile
         source={require("./images/card-bg.png")}
         style={styles.cardLayoutFrame}
         resizeMode="contain"
       >
-        {/* Invisible Hot-Link Bounding Box mapped precisely over your (405) 458-4176 graphic panel */}
         <TouchableOpacity
           style={styles.phoneLinkOverlayBox}
           onPress={handleCall}
-          activeOpacity={0.3}
+          activeOpacity={0.4}
           accessibilityLabel="Call Mack Robinson Designs"
           accessibilityRole="button"
-        />
+        >
+          {/* Subtle copper border highlighted via native web-optimized keyframes */}
+          <View 
+            style={styles.visualPulseBorder} 
+            // @ts-ignore - Explicit data-attribute maps directly to our injected CSS block safely
+            dataSet={{ media: "web-pulse-active" }}
+          />
+        </TouchableOpacity>
       </ImageBackground>
     </View>
   );
@@ -64,20 +83,34 @@ const styles = StyleSheet.create({
     width: width > 450 ? 420 : "100%",
     aspectRatio: 0.457, // Matches the exact tall dimensions of your Gutz N Shell stitched leather canvas
     position: "relative",
-    height: "100%", // FIXED: Provides explicit height parameters to prevent web browser container collapse
+    height: "100%",
   },
   phoneLinkOverlayBox: {
     position: "absolute",
-    top: "67.8%",
-    left: "8%",
-    right: "8%",
-    height: "9.2%",
-    backgroundColor: "transparent",
+    // ADJUSTED COORDS: Slightly decreased left side spacing to capture the full graphic start line cleanly
+    top: "67.8%", 
+    left: "7.2%",   // Slightly reduced from 6% to fine-tune the left edge alignment
+    right: "6%",  
+    height: "9.2%", 
+    backgroundColor: "transparent", 
     borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
     ...Platform.select({
       web: {
         cursor: "pointer",
       },
     }),
+  },
+  visualPulseBorder: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 8,
+    borderWidth: 1.2, // Retains the crisp, elegant thin copper thread line density
+    borderColor: "#ebdcd0", // Your exact premium copper thread tint
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.4,
+    shadowRadius: 2,
   },
 });
