@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Animated,
   Dimensions,
@@ -13,11 +13,11 @@ import {
 
 const { width } = Dimensions.get("window");
 
-export default function PristineLeatherCardHub() {
-  const [menuVisible, setMenuVisible] = useState(false);
-  const [slideAnim] = useState(new Animated.Value(300)); // Hidden off-screen by default
+export default function PristineLeatherCardHub(): React.JSX.Element {
+  const [menuVisible, setMenuVisible] = useState<boolean>(false);
+  const [slideAnim] = useState<Animated.Value>(new Animated.Value(300));
 
-  const handlePressOverlay = () => {
+  const handlePressOverlay = (): void => {
     setMenuVisible(true);
     Animated.timing(slideAnim, {
       toValue: 0,
@@ -26,7 +26,7 @@ export default function PristineLeatherCardHub() {
     }).start();
   };
 
-  const handleCloseMenu = () => {
+  const handleCloseMenu = (): void => {
     Animated.timing(slideAnim, {
       toValue: 300,
       duration: 200,
@@ -34,22 +34,47 @@ export default function PristineLeatherCardHub() {
     }).start(() => setMenuVisible(false));
   };
 
-  const handleCall = () => {
+  const handleCall = (): void => {
     handleCloseMenu();
     Linking.openURL("tel:+14054584176");
   };
 
-  const handleSaveContact = () => {
+  const handleSaveContact = async (): Promise<void> => {
     handleCloseMenu();
 
-    // 1. Direct the browser/app straight to your static public directory file
-    const vcardUrl =
-      Platform.OS === "web" ? "/contact.vcf" : "https://gutznshell.com"; // Safe fallback for native mobile users
+    if (Platform.OS === "web") {
+      // 1. Desktop Web Environment: Pull directly from the fast static asset folder file
+      Linking.openURL("/contact.vcf").catch((err) =>
+        console.error("Failed to fetch public contact.vcf", err),
+      );
+    } else {
+      try {
+        // 2. Mobile Native Environment (iOS/Android): Fetch the text data using the complete .vcf file path
+        const response = await fetch("https://gutznshell.com");
 
-    // 2. Command the native OS engine to handle the download file layout
-    Linking.openURL(vcardUrl).catch((err) =>
-      console.error("Failed to parse and open vCard file scheme", err),
-    );
+        if (!response.ok) {
+          throw new Error(
+            `Server responded with execution error status: ${response.status}`,
+          );
+        }
+
+        const vcardText = await response.text();
+
+        // 3. Compile the plain text cleanly into a Base64 encoded string data schema
+        const base64Vcard = btoa(unescape(encodeURIComponent(vcardText)));
+        const dataUri = `data:text/vcard;base64,${base64Vcard}`;
+
+        // 4. Fire the native device system deep link pipeline straight into Address Book UI maps
+        await Linking.openURL(dataUri);
+      } catch (err) {
+        console.error(
+          "Failed mobile local text streaming execution pipeline loop:",
+          err,
+        );
+        // Clean emergency fallback if web networks or firewalls block the fetch stream
+        Linking.openURL("https://gutznshell.com");
+      }
+    }
   };
 
   return (
@@ -77,7 +102,6 @@ export default function PristineLeatherCardHub() {
           style={styles.cardLayoutFrame}
           resizeMode="stretch"
         >
-          {/* Triggers the interactive menu layer upon press */}
           <TouchableOpacity
             style={styles.phoneLinkOverlayBox}
             onPress={handlePressOverlay}
@@ -94,7 +118,6 @@ export default function PristineLeatherCardHub() {
         </ImageBackground>
       </View>
 
-      {/* Dimmed backdrop background cover when menu is active */}
       {menuVisible && (
         <TouchableOpacity
           style={styles.menuModalBackdrop}
@@ -188,7 +211,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 3,
   },
-  /* Action Sheet Styling matched to your sleek dark layout palette */
   menuModalBackdrop: {
     position: "absolute",
     top: 0,
@@ -203,16 +225,16 @@ const styles = StyleSheet.create({
   actionSheetContainer: {
     width: "100%",
     maxWidth: 440,
-    backgroundColor: "#161514", // Leather dark background core panel
+    backgroundColor: "#161514",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 24,
     paddingBottom: Platform.OS === "ios" ? 40 : 24,
     borderTopWidth: 1,
-    borderColor: "rgba(235, 220, 208, 0.15)", // Premium subtle copper dividing trim
+    borderColor: "rgba(235, 220, 208, 0.15)",
   },
   sheetTitleText: {
-    color: "#b4b9be", // Slate header typography style
+    color: "#b4b9be",
     fontSize: 13,
     fontWeight: "bold",
     textAlign: "center",
@@ -231,7 +253,7 @@ const styles = StyleSheet.create({
     borderColor: "rgba(235, 220, 208, 0.1)",
   },
   sheetActionText: {
-    color: "#ebdcd0", // Soft warm copper font color accents
+    color: "#ebdcd0",
     fontSize: 16,
     fontWeight: "600",
     letterSpacing: 0.5,
