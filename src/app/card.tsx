@@ -41,7 +41,30 @@ export default function PristineLeatherCardHub() {
 
   const handleSaveContact = () => {
     handleCloseMenu();
-    Linking.openURL("https://vercel.app");
+
+    // 1. Build the robust vCard structure layout with finalized corporate metadata
+    const vcard = [
+      "BEGIN:VCARD",
+      "VERSION:3.0",
+      "N:Robinson;Mack;;;",
+      "FN:Mack Robinson",
+      "ORG:Gutz N Shell",
+      "TITLE:Owner and Designer",
+      "TEL;TYPE=CELL:+14054584176",
+      "EMAIL;TYPE=PREF,INTERNET:mackrobinson@gutznshell.com",
+      "URL:https://gutznshell.com",
+      "PHOTO;VALUE=URI:https://gutznshell.com",
+      "END:VCARD",
+    ].join("\n");
+
+    // 2. Safely encode into a base64 Data URI schema for browser/mobile interpretation
+    const base64Vcard = btoa(unescape(encodeURIComponent(vcard)));
+    const vcardUrl = `data:text/vcard;base64,${base64Vcard}`;
+
+    // 3. Command the native OS engine to handle the download file layout
+    Linking.openURL(vcardUrl).catch((err) =>
+      console.error("Failed to parse and open vCard file scheme", err),
+    );
   };
 
   return (

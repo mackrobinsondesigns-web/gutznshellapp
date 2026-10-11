@@ -4,33 +4,17 @@
     "slug": "GutzNShellApp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./src/app/images/icon.png",
     "scheme": "gutznshellapp",
     "userInterfaceStyle": "automatic",
-    "ios": {
-      "icon": "./src/app/images/icon.png"
-    },
     "android": {
-      "adaptiveIcon": {
-        "backgroundColor": "#000000",
-        "foregroundImage": "./src/app/images/android-icon-foreground.png",
-        "backgroundImage": "./src/app/images/android-icon-background.png",
-        "monochromeImage": "./src/app/images/android-icon-monochrome.png"
-      },
       "predictiveBackGestureEnabled": false
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./src/app/images/icon.png",
       "publicPath": "./public",
       "pwa": {
-        "enabled": false,
-        "display": "standalone",
-        "orientation": "portrait",
-        "backgroundColor": "#000000",
-        "themeColor": "#000000",
-        "icon": "./src/app/images/icon.png"
+        "enabled": false
       }
     },
     "plugins": [
@@ -38,14 +22,6 @@
         "expo-router",
         {
           "origin": "https://gutznshell.com"
-        }
-      ],
-      [
-        "expo-splash-screen",
-        {
-          "backgroundColor": "#000000",
-          "image": "./src/app/images/splash.png",
-          "imageWidth": 76
         }
       ],
       "expo-image",
