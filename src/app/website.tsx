@@ -20,7 +20,7 @@ export default function WebsiteScreen(): React.JSX.Element {
           headerShown: true,
           title: "gutznshell.com",
           headerTitleAlign: "center",
-          headerTintColor: "#fff",
+          headerTintColor: "#000000",
           headerStyle: {
             backgroundColor: "#000000",
           },
