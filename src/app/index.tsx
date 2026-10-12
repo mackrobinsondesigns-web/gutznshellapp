@@ -86,16 +86,12 @@ export default function HomeScreen(): React.JSX.Element {
             />
           </Pressable>
 
-          <Pressable
-            onPress={() => router.push("/card")}
-            style={({ pressed }) => [
-              styles.cardPortalBtn,
-              pressed && styles.cardPortalBtnPressed,
-            ]}
-          >
-            <Text style={styles.cardPortalBtnText}>
-              VIEW DIGITAL BUSINESS CARD
-            </Text>
+          <Pressable onPress={() => router.push("/card")}>
+            <Image
+              source={require("../../src/app/images/card.png")}
+              style={styles.cardPortalBtnPressed}
+              resizeMode="contain"
+            />
           </Pressable>
         </ScrollView>
       </View>
@@ -181,33 +177,9 @@ const styles = StyleSheet.create({
     height: 60,
     marginTop: 20,
   },
-  cardPortalBtn: {
-    width: 320,
-    height: 54,
-    backgroundColor: "rgba(235, 220, 208, 0.06)",
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: "rgba(235, 220, 208, 0.35)",
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 24,
-    marginBottom: 10,
-    ...Platform.select({
-      web: {
-        transition: "all 0.2s ease-in-out",
-        cursor: "pointer",
-      },
-    }),
-  },
   cardPortalBtnPressed: {
-    backgroundColor: "rgba(235, 220, 208, 0.15)",
-    borderColor: "rgba(235, 220, 208, 0.6)",
-    transform: [{ scale: 0.98 }],
-  },
-  cardPortalBtnText: {
-    color: "#ebdcd0",
-    fontSize: 13,
-    fontWeight: "700",
-    letterSpacing: 1.2,
+    width: 320,
+    height: 60,
+    marginTop: 30,
   },
 });
