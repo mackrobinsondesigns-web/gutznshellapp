@@ -24,6 +24,7 @@ export default function RootLayout(): React.JSX.Element {
           headerStyle: {
             backgroundColor: THEME_COLOR,
           },
+          headerShadowVisible: false,
           headerTintColor: "#b4b9be",
           headerTitleStyle: {
             fontWeight: "bold",

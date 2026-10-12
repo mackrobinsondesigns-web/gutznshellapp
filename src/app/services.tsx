@@ -410,20 +410,6 @@ export default function ServicesScreen() {
         />
 
         <ServicePackage
-          name="CUSTOM TRUNK UPHOLSTERY"
-          price="$750+"
-          description="Custom trunk upholstery for a cohesive look."
-          onPress={() =>
-            router.push({
-              pathname: "/estimate",
-              params: {
-                service: "CUSTOM UPGRADES — CUSTOM TRUNK UPHOLSTERY",
-              },
-            })
-          }
-        />
-
-        <ServicePackage
           name="SOUND DEADENING"
           price="$500+"
           description="Complete sound deadening for a quieter ride."
@@ -446,20 +432,6 @@ export default function ServicesScreen() {
               pathname: "/estimate",
               params: {
                 service: "CUSTOM UPGRADES — CUSTOM TRUNK UPHOLSTERY",
-              },
-            })
-          }
-        />
-
-        <ServicePackage
-          name="SOUND DEADENING"
-          price="$500+"
-          description="Complete sound deadening for a quieter ride."
-          onPress={() =>
-            router.push({
-              pathname: "/estimate",
-              params: {
-                service: "CUSTOM UPGRADES — SOUND DEADENING",
               },
             })
           }

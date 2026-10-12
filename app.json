@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "scheme": "gutznshellapp",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "dark",
     "android": {
       "predictiveBackGestureEnabled": false
     },
@@ -14,7 +14,19 @@
       "output": "static",
       "publicPath": "./public",
       "pwa": {
-        "enabled": false
+        "enabled": true,
+        "themeColor": "#000000",
+        "backgroundColor": "#000000",
+        "manifest": {
+          "background_color": "#000000",
+          "theme_color": "#000000",
+          "display": "standalone",
+          "orientation": "portrait"
+        },
+        "meta": {
+          "apple-mobile-web-app-status-bar-style": "black-translucent",
+          "theme-color": "#000000"
+        }
       }
     },
     "plugins": [

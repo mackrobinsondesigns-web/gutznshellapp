@@ -15,11 +15,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function HomeScreen(): React.JSX.Element {
   const handlePress = (): void => {
     if (Platform.OS === "web") {
-      // 1. Open the clean blank browser tab frame natively
       const newTab = window.open("about:blank", "_blank");
 
       if (newTab) {
-        // 2. IMMEDIATELY inject a dark backdrop style into the empty document to prevent the white flash
         newTab.document.write(`
           <html style="background-color: #000000; height: 100%; width: 100%;">
             <head><title>Loading Gutz N Shell...</title></head>
@@ -28,8 +26,6 @@ export default function HomeScreen(): React.JSX.Element {
           </html>
         `);
         newTab.document.close();
-
-        // 3. Seamlessly redirect the dark frame to load your live website content
         newTab.location.href = "https://gutznshell.com";
       }
     } else {
@@ -38,7 +34,11 @@ export default function HomeScreen(): React.JSX.Element {
   };
 
   return (
-    <SafeAreaView style={styles.safeAreaContainer}>
+    // FIX: Specify edges to exclude 'top' so your black stack header meets your layout perfectly
+    <SafeAreaView
+      style={styles.safeAreaContainer}
+      edges={["bottom", "left", "right"]}
+    >
       <View style={styles.appShell}>
         <ScrollView
           contentContainerStyle={styles.scrollContainer}
