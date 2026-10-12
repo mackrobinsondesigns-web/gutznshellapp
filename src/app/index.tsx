@@ -3,7 +3,6 @@ import React from "react";
 import {
   Image,
   Platform,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -34,7 +33,6 @@ export default function HomeScreen(): React.JSX.Element {
   };
 
   return (
-    // FIX: Specify edges to exclude 'top' so your black stack header meets your layout perfectly
     <SafeAreaView
       style={styles.safeAreaContainer}
       edges={["bottom", "left", "right"]}
@@ -45,54 +43,76 @@ export default function HomeScreen(): React.JSX.Element {
           showsVerticalScrollIndicator={false}
           bounces={true}
         >
-          <TouchableOpacity onPress={handlePress} activeOpacity={0.7}>
-            <Image
-              source={require("../../src/app/images/gutz-n-shell-logo.png")}
-              style={styles.logo}
-            />
-          </TouchableOpacity>
+          {/* Brand Identity Branding Header Header Section */}
+          <View style={styles.headerSection}>
+            <TouchableOpacity onPress={handlePress} activeOpacity={0.7}>
+              <Image
+                source={require("../../src/app/images/gutz-n-shell-logo.png")}
+                style={styles.logo}
+              />
+            </TouchableOpacity>
 
-          <Text style={styles.title}>GUTZ N SHELL</Text>
+            <Text style={styles.title}>GUTZ N SHELL</Text>
 
-          <Text style={styles.subtitle}>
-            PREMIUM AUTOMOTIVE INTERIOR RESTORATION
-          </Text>
+            <Text style={styles.subtitle}>
+              PREMIUM AUTOMOTIVE INTERIOR RESTORATION
+            </Text>
 
-          <Text style={styles.tagline}>
-            REPAIR IT • RESTORE IT • CUSTOMIZE IT
-          </Text>
+            <Text style={styles.tagline}>
+              REPAIR IT • RESTORE IT • CUSTOMIZE IT
+            </Text>
+          </View>
 
-          <Pressable onPress={() => router.push("/seat-repair")}>
-            <Image
-              source={require("../../src/app/images/seat-repair.png")}
-              style={styles.repairButtonImage}
-              resizeMode="contain"
-            />
-          </Pressable>
+          {/* Navigation Action Buttons Section */}
+          <View style={styles.menuSection}>
+            <TouchableOpacity
+              style={styles.buttonWrapper}
+              onPress={() => router.push("/seat-repair")}
+              activeOpacity={0.8}
+            >
+              <Image
+                source={require("../../src/app/images/seat-repair.png")}
+                style={styles.buttonImage}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
 
-          <Pressable onPress={() => router.push("/estimate")}>
-            <Image
-              source={require("../../src/app/images/request-estimate.png")}
-              style={styles.estimateButtonImage}
-              resizeMode="contain"
-            />
-          </Pressable>
+            <TouchableOpacity
+              style={styles.buttonWrapper}
+              onPress={() => router.push("/estimate")}
+              activeOpacity={0.8}
+            >
+              <Image
+                source={require("../../src/app/images/request-estimate.png")}
+                style={styles.buttonImage}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
 
-          <Pressable onPress={() => router.push("/services")}>
-            <Image
-              source={require("../../src/app/images/our-services.png")}
-              style={styles.servicesButtonImage}
-              resizeMode="contain"
-            />
-          </Pressable>
+            <TouchableOpacity
+              style={styles.buttonWrapper}
+              onPress={() => router.push("/services")}
+              activeOpacity={0.8}
+            >
+              <Image
+                source={require("../../src/app/images/our-services.png")}
+                style={styles.buttonImage}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
 
-          <Pressable onPress={() => router.push("/card")}>
-            <Image
-              source={require("../../src/app/images/card.png")}
-              style={styles.cardPortalBtnPressed}
-              resizeMode="contain"
-            />
-          </Pressable>
+            <TouchableOpacity
+              style={styles.buttonWrapper}
+              onPress={() => router.push("/card")}
+              activeOpacity={0.8}
+            >
+              <Image
+                source={require("../../src/app/images/card.png")}
+                style={styles.buttonImage}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          </View>
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -122,10 +142,10 @@ const styles = StyleSheet.create({
     }),
   },
   scrollContainer: {
-    justifyContent: "center",
     alignItems: "center",
-    padding: 20,
-    paddingBottom: 40,
+    paddingHorizontal: 20,
+    paddingTop: 30,
+    paddingBottom: 50,
     flexGrow: 1,
     width: "100%",
     ...Platform.select({
@@ -135,51 +155,53 @@ const styles = StyleSheet.create({
       },
     }),
   },
+  headerSection: {
+    alignItems: "center",
+    width: "100%",
+    marginBottom: 25,
+  },
   logo: {
-    width: 180,
-    height: 180,
-    marginTop: 10,
-    marginBottom: 20,
+    width: 160,
+    height: 160,
+    marginBottom: 15,
     borderRadius: 20,
   },
   title: {
-    fontSize: 36,
+    fontSize: 34,
     fontWeight: "bold",
     color: "#b4b9be",
     textAlign: "center",
+    letterSpacing: 1,
   },
   subtitle: {
-    fontSize: 15,
+    fontSize: 14,
     textAlign: "center",
-    marginTop: 12,
+    marginTop: 10,
     fontWeight: "bold",
     color: "#b4b9be",
+    paddingHorizontal: 10,
   },
   tagline: {
-    fontSize: 14,
-    marginTop: 10,
+    fontSize: 13,
+    marginTop: 8,
     textAlign: "center",
     fontWeight: "bold",
-    color: "#b4b9be",
+    color: "#8f4a24",
   },
-  repairButtonImage: {
-    width: 320,
-    height: 60,
-    marginTop: 20,
+  menuSection: {
+    width: "100%",
+    maxWidth: 340,
+    alignItems: "center",
+    gap: 15,
   },
-  estimateButtonImage: {
-    width: 320,
-    height: 60,
-    marginTop: 20,
+  buttonWrapper: {
+    width: "100%",
+    aspectRatio: 320 / 60,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  servicesButtonImage: {
-    width: 320,
-    height: 60,
-    marginTop: 20,
-  },
-  cardPortalBtnPressed: {
-    width: 320,
-    height: 60,
-    marginTop: 30,
+  buttonImage: {
+    width: "100%",
+    height: "100%",
   },
 });

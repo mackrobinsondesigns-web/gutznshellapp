@@ -49,7 +49,7 @@ export default function PristineLeatherCardHub(): React.JSX.Element {
       );
     } else {
       try {
-        // 2. Mobile Native Environment (iOS/Android): Fetch the text data using the complete .vcf file path
+        // FIX: Point explicitly to your static file endpoint, NOT your home page root
         const response = await fetch("https://gutznshell.com");
 
         if (!response.ok) {
