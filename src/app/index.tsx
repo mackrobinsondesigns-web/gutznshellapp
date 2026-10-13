@@ -32,10 +32,15 @@ export default function HomeScreen(): React.JSX.Element {
     }
   };
 
+  // FIX 1: Turn off Safe Area padding calculations exclusively for web platforms
+  // to prevent it from injecting an empty bottom spacing strip.
+  const safeEdges = Platform.OS === "web" ? [] : ["bottom", "left", "right"];
+
   return (
     <SafeAreaView
       style={styles.safeAreaContainer}
-      edges={["bottom", "left", "right"]}
+      // @ts-ignore - Dynamic edges are safe here
+      edges={safeEdges}
     >
       <View style={styles.appShell}>
         <ScrollView
@@ -124,15 +129,21 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#000000",
     width: "100%",
+    // FIX 2: Ensure the container stretches fully to cover the root viewport bounds
+    height: "100%",
     ...Platform.select({
       web: {
         overflowX: "hidden",
+        // Force the web viewport flex canvas to expand all the way
+        minHeight: "100vh",
       },
     }),
   },
   appShell: {
     flex: 1,
     width: "100%",
+    height: "100%",
+    backgroundColor: "#000000", // FIX 3: Safety backdrop fill color
     ...Platform.select({
       web: {
         maxWidth: 550,
@@ -148,6 +159,7 @@ const styles = StyleSheet.create({
     paddingBottom: 50,
     flexGrow: 1,
     width: "100%",
+    backgroundColor: "#000000", // FIX 4: Safety backdrop fill color
     ...Platform.select({
       web: {
         overflowX: "hidden",

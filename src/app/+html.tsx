@@ -9,19 +9,21 @@ export default function Root({ children }: PropsWithChildren) {
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta
           name="viewport"
-          content="width=device-width, initial-scale=1, shrink-to-fit=no"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover"
         />
         <ScrollViewStyleReset />
 
-        {/* Global CSS fix to prevent canvas collapse */}
+        {/* Global CSS fix to prevent canvas collapse and seal white background bleeding */}
         <style
           dangerouslySetInnerHTML={{
             __html: `
           html, body, #root, #__next {
-            height: 100%;
-            width: 100%;
-            margin: 0;
-            padding: 0;
+            height: 100% !important;
+            height: 100dvh !important; /* Dynamic Viewport Height fixes mobile layout shifts */
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            background-color: #000000 !important; /* Force document backdrop to pitch black */
             overflow: hidden;
           }
         `,
@@ -30,7 +32,11 @@ export default function Root({ children }: PropsWithChildren) {
 
         {/* iOS mobile web app capability tags */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        {/* Changed to black-translucent so the system status bar elements layer cleanly directly over your dark app canvas */}
+        <meta
+          name="apple-mobile-web-app-status-bar-style"
+          content="black-translucent"
+        />
         <meta name="apple-mobile-web-app-title" content="GutzNShell" />
 
         {/* Mobile Browser Address Bar and Splash Sync Color */}

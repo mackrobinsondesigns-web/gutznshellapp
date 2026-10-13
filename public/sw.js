@@ -12,6 +12,7 @@ const ASSETS_TO_CACHE = [
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
+      // Use cache.addAll safely
       return cache.addAll(ASSETS_TO_CACHE);
     }),
   );
@@ -34,26 +35,37 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
-// Fetch Event - Serves cached items offline, drops back to network online
+// SINGLE Fetch Event - Handles caching, network fallback, and offline states
 self.addEventListener("fetch", (event) => {
-  // Only handle local web requests
-  if (!event.request.url.startsWith(self.location.origin)) return;
+  // Only handle GET requests and local web assets
+  if (
+    event.request.method !== "GET" ||
+    !event.request.url.startsWith(self.location.origin)
+  ) {
+    return;
+  }
 
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
+      // 1. Serve from cache if found
       if (cachedResponse) {
         return cachedResponse;
       }
-      return fetch(event.request);
-    }),
-  );
-});
 
-self.addEventListener("fetch", (event) => {
-  // A minimal fetch handler is required for PWA installability
-  event.respondWith(
-    fetch(event.request).catch(() => {
-      return new Response("You are offline.");
+      // 2. Otherwise, fetch from network
+      return fetch(event.request).catch(() => {
+        // 3. Elegant offline fallback if network fails
+        // If it's a page navigation request, you can serve index.html
+        if (event.request.mode === "navigate") {
+          return caches.match("/index.html");
+        }
+
+        // Generic offline response for assets/APIs
+        return new Response("You are offline.", {
+          status: 503,
+          headers: { "Content-Type": "text/plain" },
+        });
+      });
     }),
   );
 });

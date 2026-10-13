@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Animated,
   Dimensions,
@@ -15,7 +15,8 @@ const { width } = Dimensions.get("window");
 
 export default function PristineLeatherCardHub(): React.JSX.Element {
   const [menuVisible, setMenuVisible] = useState<boolean>(false);
-  const [slideAnim] = useState<Animated.Value>(new Animated.Value(300));
+  // FIX: Use useRef for Animated values so they persist across component re-renders safely
+  const slideAnim = useRef(new Animated.Value(300)).current;
 
   const handlePressOverlay = (): void => {
     setMenuVisible(true);
@@ -49,7 +50,7 @@ export default function PristineLeatherCardHub(): React.JSX.Element {
       );
     } else {
       try {
-        // FIX: Point explicitly to your static file endpoint, NOT your home page root
+        // FIX 1: Point directly to the actual contact file asset hosted on your Vercel deployment
         const response = await fetch("https://gutznshell.com");
 
         if (!response.ok) {
@@ -60,8 +61,17 @@ export default function PristineLeatherCardHub(): React.JSX.Element {
 
         const vcardText = await response.text();
 
-        // 3. Compile the plain text cleanly into a Base64 encoded string data schema
-        const base64Vcard = btoa(unescape(encodeURIComponent(vcardText)));
+        // FIX 2: Safeguard base64 encoding for pure React Native environments where btoa doesn't exist
+        let base64Vcard = "";
+        if (typeof btoa === "function") {
+          base64Vcard = btoa(unescape(encodeURIComponent(vcardText)));
+        } else {
+          // Native fallback using global Buffer constructs if available, or universal URI schemes
+          base64Vcard = require("buffer")
+            .Buffer.from(vcardText, "utf-8")
+            .toString("base64");
+        }
+
         const dataUri = `data:text/vcard;base64,${base64Vcard}`;
 
         // 4. Fire the native device system deep link pipeline straight into Address Book UI maps
@@ -71,7 +81,7 @@ export default function PristineLeatherCardHub(): React.JSX.Element {
           "Failed mobile local text streaming execution pipeline loop:",
           err,
         );
-        // Clean emergency fallback if web networks or firewalls block the fetch stream
+        // Clean emergency fallback: Download directly in the mobile browser if data stream fails
         Linking.openURL("https://gutznshell.com");
       }
     }

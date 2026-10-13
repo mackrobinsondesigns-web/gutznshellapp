@@ -1,5 +1,7 @@
 import { DarkTheme, Stack, ThemeProvider } from "expo-router";
 import React from "react";
+// FIX 1: Import Platform to target the Web document wrapper safely
+import { Platform } from "react-native";
 
 // Define your uniform color theme
 const THEME_COLOR = "#000000";
@@ -16,6 +18,23 @@ const CustomTheme = {
 export default function RootLayout(): React.JSX.Element {
   return (
     <ThemeProvider value={CustomTheme}>
+      {/* FIX 2: Inject a global background color to completely cover the browser document elements */}
+      {Platform.OS === "web" && (
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+              html, body, #root, #__next {
+                background-color: ${THEME_COLOR} !important;
+                height: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                overflow-x: hidden;
+              }
+            `,
+          }}
+        />
+      )}
+
       <Stack
         screenOptions={{
           animation: "slide_from_bottom",
