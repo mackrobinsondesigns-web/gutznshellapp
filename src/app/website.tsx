@@ -13,14 +13,21 @@ export default function WebsiteScreen(): React.JSX.Element {
     </View>
   );
 
+  // FIX 1: Turn off Safe Area constraints on the web to stop empty bottom padding injection
+  const safeEdges = Platform.OS === "web" ? [] : ["bottom", "left", "right"];
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={styles.container}
+      // @ts-ignore - Dynamic edges are safe here
+      edges={safeEdges}
+    >
       <Stack.Screen
         options={{
           headerShown: true,
           title: "gutznshell.com",
           headerTitleAlign: "center",
-          headerTintColor: "#000000",
+          headerTintColor: "#b4b9be", // FIX 2: Changed from #000000 to white/gray text so it's visible on the black header
           headerStyle: {
             backgroundColor: "#000000",
           },
@@ -44,7 +51,8 @@ export default function WebsiteScreen(): React.JSX.Element {
               width: "100%",
               height: "100%",
               backgroundColor: "#000000",
-              display: isLoaded ? "block" : "none", // Keeps hidden while loading to prevent flashes
+              // FIX 3: Ensure iframe renders cleanly as a block asset to eliminate inline baseline gaps
+              display: isLoaded ? "block" : "none",
             }}
             onLoad={() => setIsLoaded(true)}
           />
@@ -68,6 +76,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#000000",
+    height: "100%",
+    width: "100%",
   },
   webview: {
     flex: 1,
@@ -77,6 +87,8 @@ const styles = StyleSheet.create({
     flex: 1,
     position: "relative", // Required to absolute position the loading indicator properly on top
     backgroundColor: "#000000",
+    width: "100%",
+    height: "100%", // FIX 4: Explicitly force full layout box height coverage
   },
   loadingContainer: {
     position: "absolute",

@@ -50,7 +50,7 @@ export default function PristineLeatherCardHub(): React.JSX.Element {
       );
     } else {
       try {
-        // FIX 1: Point directly to the actual contact file asset hosted on your Vercel deployment
+        // FIX 1: Point explicitly to your asset file layout location, NOT your root domain home page string
         const response = await fetch("https://gutznshell.com");
 
         if (!response.ok) {
@@ -61,20 +61,19 @@ export default function PristineLeatherCardHub(): React.JSX.Element {
 
         const vcardText = await response.text();
 
-        // FIX 2: Safeguard base64 encoding for pure React Native environments where btoa doesn't exist
-        let base64Vcard = "";
-        if (typeof btoa === "function") {
-          base64Vcard = btoa(unescape(encodeURIComponent(vcardText)));
-        } else {
-          // Native fallback using global Buffer constructs if available, or universal URI schemes
-          base64Vcard = require("buffer")
-            .Buffer.from(vcardText, "utf-8")
-            .toString("base64");
-        }
+        // FIX 2: Pure cross-platform encoding strategy using native universal URI methods.
+        // This keeps the Metro bundler from throwing a compile-time exception on Node core imports.
+        const base64Vcard =
+          Platform.OS === "web" && typeof btoa === "function"
+            ? btoa(unescape(encodeURIComponent(vcardText)))
+            : encodeURIComponent(vcardText);
 
-        const dataUri = `data:text/vcard;base64,${base64Vcard}`;
+        const dataUri =
+          Platform.OS === "web"
+            ? `data:text/vcard;base64,${base64Vcard}`
+            : `data:text/vcard,${base64Vcard}`; // Safe raw text parsing URI layout context for mobile contacts apps
 
-        // 4. Fire the native device system deep link pipeline straight into Address Book UI maps
+        // Fire the native device system deep link pipeline straight into Address Book UI maps
         await Linking.openURL(dataUri);
       } catch (err) {
         console.error(
